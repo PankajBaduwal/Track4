@@ -1,0 +1,2288 @@
+# StudyBuddy: Complete Project Documentation
+
+## Table of Contents
+1. Project Overview
+2. System Architecture
+3. Database Design
+4. API Endpoints
+5. User Flow Diagrams
+6. Technical Implementation
+7. Features Breakdown
+8. SDG Alignment & Metrics
+9. Revenue Model Details
+10. Development Timeline
+
+---
+
+## 1. PROJECT OVERVIEW
+
+### **Project Name:** StudyBuddy
+### **Tagline:** Peer-to-Peer Academic Marketplace
+
+### **Problem Statement**
+Students face a critical gap in accessing affordable academic support. Professional tutoring costs $50-60/hour, campus tutoring centers have 2-week waitlists, and low-income students often skip getting help entirely, leading to poor grades and increased dropout rates. Meanwhile, high-performing students have knowledge to share but lack platforms to monetize their expertise.
+
+### **Solution**
+StudyBuddy is a campus-based peer tutoring marketplace that connects students seeking help with student tutors at affordable rates ($10-20/hour). The platform facilitates discovery, booking, payment, and session management while taking a 15% commission to sustain operations.
+
+### **Target Users**
+- **Primary:** College students (ages 18-24)
+- **User Type 1:** Students seeking tutoring (Tutees)
+- **User Type 2:** Students offering tutoring (Tutors)
+- **Initial Market:** Single university campus (expand later)
+
+### **Core Value Proposition**
+- **For Tutees:** Affordable, peer-level academic help from students who recently took the same courses
+- **For Tutors:** Flexible income opportunity using existing knowledge
+- **For Platform:** Sustainable revenue while creating social impact
+
+---
+
+## 2. SYSTEM ARCHITECTURE
+
+### **High-Level Architecture**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        CLIENT LAYER                          │
+│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐│
+│  │  Web Browser   │  │  Mobile Web    │  │  PWA (Future)  ││
+│  │   (Desktop)    │  │   (Responsive) │  │                ││
+│  └────────────────┘  └────────────────┘  └────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   PRESENTATION LAYER                         │
+│                    React Frontend                            │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Components: Auth, Profiles, Search, Booking, Chat   │  │
+│  │  State Management: React Context / Redux             │  │
+│  │  Routing: React Router                               │  │
+│  │  UI: Tailwind CSS + Shadcn/ui                        │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    APPLICATION LAYER                         │
+│                  API / Backend Services                      │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Next.js API Routes / Node.js + Express              │  │
+│  │  - Authentication Service                            │  │
+│  │  - User Management Service                           │  │
+│  │  - Booking Service                                   │  │
+│  │  - Payment Service                                   │  │
+│  │  - Messaging Service                                 │  │
+│  │  - Rating/Review Service                             │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      DATA LAYER                              │
+│  ┌───────────────┐  ┌───────────────┐  ┌────────────────┐ │
+│  │   Firebase    │  │   Stripe      │  │  Cloud Storage │ │
+│  │  Firestore    │  │   Payments    │  │  (Profile Pics)│ │
+│  │  (Database)   │  │               │  │                │ │
+│  └───────────────┘  └───────────────┘  └────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  EXTERNAL SERVICES                           │
+│  ┌───────────┐  ┌──────────┐  ┌──────────┐  ┌───────────┐ │
+│  │  Stripe   │  │  SendGrid│  │  Zoom    │  │  Firebase │ │
+│  │  Connect  │  │  (Email) │  │  API     │  │   Auth    │ │
+│  └───────────┘  └──────────┘  └──────────┘  └───────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### **Technology Stack**
+
+#### **Frontend**
+- **Framework:** React 18+ with Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + Shadcn/ui components
+- **State Management:** React Context API (Zustand for complex state)
+- **Forms:** React Hook Form + Zod validation
+- **Calendar:** React Big Calendar or FullCalendar
+- **Real-time:** Firebase Realtime Database (for chat)
+
+#### **Backend**
+- **Runtime:** Node.js 18+
+- **Framework:** Next.js API Routes (serverless functions)
+- **Language:** TypeScript
+- **Authentication:** Firebase Auth
+- **Database:** Firebase Firestore (NoSQL)
+- **File Storage:** Firebase Cloud Storage
+- **API Documentation:** Swagger/OpenAPI
+
+#### **Third-Party Services**
+- **Payments:** Stripe Connect (marketplace payments)
+- **Email:** SendGrid or Resend
+- **Video:** Zoom API or Google Meet integration
+- **Hosting:** Vercel (frontend + API routes)
+- **CDN:** Vercel Edge Network
+- **Analytics:** Google Analytics 4 + Mixpanel
+
+#### **Development Tools**
+- **Version Control:** Git + GitHub
+- **Package Manager:** npm or pnpm
+- **Linting:** ESLint + Prettier
+- **Testing:** Jest + React Testing Library
+- **CI/CD:** GitHub Actions + Vercel auto-deploy
+
+---
+
+## 3. DATABASE DESIGN
+
+### **Database Choice: Firebase Firestore (NoSQL)**
+
+**Why Firestore?**
+- Real-time updates (perfect for messaging)
+- Easy authentication integration
+- Generous free tier (50K reads/day)
+- Automatic scaling
+- Offline support
+- Simple querying for MVP
+
+### **Collections & Schema**
+
+#### **Collection: `users`**
+```javascript
+{
+  uid: "firebase_auth_uid",              // Primary key (from Firebase Auth)
+  email: "student@university.edu",       // Required, unique
+  role: "tutor" | "tutee" | "both",      // User type
+  profile: {
+    firstName: "John",
+    lastName: "Doe",
+    photoURL: "https://storage.../profile.jpg",
+    bio: "Senior CS major, love teaching algorithms",
+    university: "XYZ University",        // For multi-campus future
+    yearOfStudy: 3,                      // 1-4 or "grad"
+    major: "Computer Science",
+    phoneNumber: "+1234567890",          // Optional
+    verified: true                       // Email verification status
+  },
+  tutorProfile: {                        // Only if role includes "tutor"
+    subjects: [
+      {
+        subject: "Calculus I",
+        proficiency: "expert",           // beginner/intermediate/expert
+        hourlyRate: 15,                  // USD per hour
+        description: "Took course with Prof. Smith, got A+"
+      },
+      {
+        subject: "Python Programming",
+        proficiency: "intermediate",
+        hourlyRate: 12,
+        description: "2 years experience"
+      }
+    ],
+    availability: {
+      monday: ["09:00-12:00", "14:00-17:00"],
+      tuesday: ["10:00-15:00"],
+      wednesday: [],
+      thursday: ["09:00-12:00"],
+      friday: ["13:00-18:00"],
+      saturday: [],
+      sunday: []
+    },
+    rating: 4.7,                         // Average rating
+    totalSessions: 23,                   // Completed sessions
+    totalEarnings: 345.00,               // USD earned (gross)
+    stripeAccountId: "acct_xxx",         // Stripe Connect account
+    isActive: true,                      // Currently accepting bookings
+    badges: ["top_rated", "verified"]    // Achievement badges
+  },
+  tuteeProfile: {                        // Only if role includes "tutee"
+    completedSessions: 5,
+    totalSpent: 75.00,                   // USD spent
+    subjects: ["Calculus I", "Physics"]  // Subjects they're learning
+  },
+  preferences: {
+    notifications: {
+      email: true,
+      push: false,
+      sms: false
+    },
+    timezone: "America/New_York"
+  },
+  createdAt: Timestamp,
+  updatedAt: Timestamp,
+  lastLoginAt: Timestamp
+}
+```
+
+#### **Collection: `sessions`**
+```javascript
+{
+  sessionId: "sess_abc123",              // Primary key (auto-generated)
+  tutorId: "uid_tutor",                  // Reference to users collection
+  tuteeId: "uid_tutee",                  // Reference to users collection
+  subject: "Calculus I",
+  status: "pending" | "confirmed" | "completed" | "cancelled" | "disputed",
+  scheduledAt: Timestamp,                // Session date/time
+  duration: 60,                          // Minutes
+  pricing: {
+    hourlyRate: 15,                      // Rate at time of booking
+    totalAmount: 15.00,                  // Total student pays
+    platformFee: 2.25,                   // 15% commission
+    tutorEarnings: 12.75                 // Amount tutor receives
+  },
+  paymentStatus: "pending" | "paid" | "refunded",
+  paymentIntentId: "pi_xxx",             // Stripe Payment Intent ID
+  transferId: "tr_xxx",                  // Stripe Transfer ID (to tutor)
+  meetingLink: "https://zoom.us/j/xxx",  // Video call URL
+  notes: {
+    tuteeNotes: "Need help with derivatives",  // Notes from student
+    tutorNotes: "Review chain rule basics"     // Notes from tutor
+  },
+  rating: {                              // Added after session completion
+    score: 5,                            // 1-5 stars
+    review: "Great tutor, very patient!",
+    createdAt: Timestamp
+  },
+  cancellation: {                        // If cancelled
+    cancelledBy: "tutor" | "tutee",
+    reason: "Schedule conflict",
+    cancelledAt: Timestamp,
+    refundAmount: 15.00
+  },
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+```
+
+#### **Collection: `messages`**
+```javascript
+{
+  messageId: "msg_abc123",               // Primary key
+  conversationId: "conv_uid1_uid2",      // Composite: sorted user IDs
+  senderId: "uid_sender",
+  receiverId: "uid_receiver",
+  content: "Hi, can you help with problem 5?",
+  type: "text" | "session_request" | "system",
+  metadata: {                            // For session requests
+    sessionId: "sess_abc123",
+    action: "request" | "accept" | "decline"
+  },
+  read: false,
+  createdAt: Timestamp
+}
+```
+
+#### **Collection: `conversations`**
+```javascript
+{
+  conversationId: "conv_uid1_uid2",      // Primary key (sorted UIDs)
+  participants: ["uid1", "uid2"],        // Array of user IDs
+  lastMessage: {
+    content: "Sounds good!",
+    senderId: "uid1",
+    timestamp: Timestamp
+  },
+  unreadCount: {
+    uid1: 0,
+    uid2: 2
+  },
+  updatedAt: Timestamp
+}
+```
+
+#### **Collection: `reviews`**
+```javascript
+{
+  reviewId: "rev_abc123",                // Primary key
+  sessionId: "sess_abc123",              // Reference to session
+  reviewerId: "uid_tutee",               // Who left the review
+  revieweeId: "uid_tutor",               // Who is being reviewed
+  rating: 5,                             // 1-5 stars
+  review: "Excellent tutor!",
+  tags: ["patient", "knowledgeable", "helpful"],  // Predefined tags
+  helpful: 3,                            // How many found this helpful
+  createdAt: Timestamp
+}
+```
+
+#### **Collection: `transactions`**
+```javascript
+{
+  transactionId: "txn_abc123",           // Primary key
+  sessionId: "sess_abc123",
+  type: "payment" | "payout" | "refund",
+  amount: 15.00,
+  platformFee: 2.25,
+  netAmount: 12.75,
+  currency: "USD",
+  stripePaymentIntentId: "pi_xxx",
+  stripeTransferId: "tr_xxx",
+  status: "pending" | "succeeded" | "failed",
+  metadata: {
+    tutorId: "uid_tutor",
+    tuteeId: "uid_tutee"
+  },
+  createdAt: Timestamp
+}
+```
+
+#### **Collection: `notifications`**
+```javascript
+{
+  notificationId: "notif_abc123",
+  userId: "uid_receiver",
+  type: "session_request" | "session_confirmed" | "session_reminder" | 
+        "message" | "review" | "payment",
+  title: "New session request",
+  body: "John Doe wants to book Calculus I tutoring",
+  data: {
+    sessionId: "sess_abc123",
+    actionUrl: "/sessions/sess_abc123"
+  },
+  read: false,
+  createdAt: Timestamp
+}
+```
+
+#### **Collection: `analytics`** (for SDG metrics)
+```javascript
+{
+  date: "2024-02-12",                    // Date string (YYYY-MM-DD)
+  metrics: {
+    totalSessions: 45,
+    totalRevenue: 675.00,
+    platformFees: 101.25,
+    tutorEarnings: 573.75,
+    newUsers: 12,
+    activeUsers: 234,
+    avgSessionRating: 4.6,
+    financialAidStudents: 18,            // SDG #10 metric
+    subjectsOffered: 23                  // SDG #4 metric
+  },
+  updatedAt: Timestamp
+}
+```
+
+### **Database Indexes**
+
+```javascript
+// Firestore Composite Indexes (create in Firebase Console)
+
+// For searching tutors
+users: {
+  fields: ["role", "tutorProfile.isActive", "tutorProfile.rating"],
+  order: "descending"
+}
+
+// For tutor availability search
+users: {
+  fields: ["tutorProfile.subjects.subject", "tutorProfile.rating"],
+  order: "descending"
+}
+
+// For user's sessions
+sessions: {
+  fields: ["tuteeId", "scheduledAt"],
+  order: "descending"
+}
+
+sessions: {
+  fields: ["tutorId", "scheduledAt"],
+  order: "descending"
+}
+
+// For messages in conversation
+messages: {
+  fields: ["conversationId", "createdAt"],
+  order: "ascending"
+}
+
+// For unread notifications
+notifications: {
+  fields: ["userId", "read", "createdAt"],
+  order: "descending"
+}
+```
+
+---
+
+## 4. API ENDPOINTS
+
+### **Base URL:** `https://studybuddy.vercel.app/api`
+
+### **Authentication Endpoints**
+
+#### **POST /auth/register**
+Register new user
+```javascript
+// Request
+{
+  email: "student@university.edu",
+  password: "SecurePass123!",
+  firstName: "John",
+  lastName: "Doe",
+  role: "both",  // "tutor" | "tutee" | "both"
+  university: "XYZ University"
+}
+
+// Response (201 Created)
+{
+  success: true,
+  data: {
+    uid: "firebase_uid",
+    email: "student@university.edu",
+    token: "firebase_id_token"
+  }
+}
+```
+
+#### **POST /auth/login**
+User login
+```javascript
+// Request
+{
+  email: "student@university.edu",
+  password: "SecurePass123!"
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    uid: "firebase_uid",
+    token: "firebase_id_token",
+    role: "both"
+  }
+}
+```
+
+#### **POST /auth/logout**
+User logout
+```javascript
+// Headers
+Authorization: Bearer {firebase_token}
+
+// Response (200 OK)
+{
+  success: true,
+  message: "Logged out successfully"
+}
+```
+
+#### **POST /auth/verify-email**
+Send email verification
+```javascript
+// Headers
+Authorization: Bearer {firebase_token}
+
+// Response (200 OK)
+{
+  success: true,
+  message: "Verification email sent"
+}
+```
+
+---
+
+### **User Profile Endpoints**
+
+#### **GET /users/:userId**
+Get user profile
+```javascript
+// Headers
+Authorization: Bearer {firebase_token}
+
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    uid: "uid_123",
+    email: "student@university.edu",
+    profile: { /* ... */ },
+    tutorProfile: { /* ... if tutor */ },
+    tuteeProfile: { /* ... if tutee */ }
+  }
+}
+```
+
+#### **PATCH /users/:userId**
+Update user profile
+```javascript
+// Request
+{
+  profile: {
+    bio: "Updated bio",
+    phoneNumber: "+1234567890"
+  }
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: { /* updated user object */ }
+}
+```
+
+#### **POST /users/:userId/photo**
+Upload profile photo
+```javascript
+// Request (multipart/form-data)
+{
+  photo: File
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    photoURL: "https://storage.../profile.jpg"
+  }
+}
+```
+
+---
+
+### **Tutor Endpoints**
+
+#### **GET /tutors**
+Search/filter tutors
+```javascript
+// Query params
+?subject=Calculus I&minRating=4.0&maxRate=20&availability=monday
+
+// Response (200 OK)
+{
+  success: true,
+  data: [
+    {
+      uid: "uid_tutor1",
+      profile: {
+        firstName: "Jane",
+        lastName: "Smith",
+        photoURL: "...",
+        rating: 4.8
+      },
+      subjects: [
+        {
+          subject: "Calculus I",
+          hourlyRate: 15,
+          proficiency: "expert"
+        }
+      ],
+      totalSessions: 45,
+      availability: { /* ... */ }
+    },
+    // ... more tutors
+  ],
+  pagination: {
+    total: 23,
+    page: 1,
+    limit: 10
+  }
+}
+```
+
+#### **POST /tutors/:tutorId/subjects**
+Add subject to tutor profile
+```javascript
+// Request
+{
+  subject: "Python Programming",
+  proficiency: "intermediate",
+  hourlyRate: 12,
+  description: "2 years experience"
+}
+
+// Response (201 Created)
+{
+  success: true,
+  data: { /* updated tutor profile */ }
+}
+```
+
+#### **PATCH /tutors/:tutorId/availability**
+Update tutor availability
+```javascript
+// Request
+{
+  monday: ["09:00-12:00", "14:00-17:00"],
+  tuesday: [],
+  // ... other days
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: { /* updated availability */ }
+}
+```
+
+---
+
+### **Session/Booking Endpoints**
+
+#### **POST /sessions**
+Create session booking
+```javascript
+// Request
+{
+  tutorId: "uid_tutor",
+  subject: "Calculus I",
+  scheduledAt: "2024-02-15T14:00:00Z",
+  duration: 60,
+  notes: "Need help with derivatives"
+}
+
+// Response (201 Created)
+{
+  success: true,
+  data: {
+    sessionId: "sess_abc123",
+    status: "pending",
+    paymentIntentId: "pi_xxx",
+    clientSecret: "pi_xxx_secret_yyy"  // For Stripe confirmation
+  }
+}
+```
+
+#### **GET /sessions**
+Get user's sessions
+```javascript
+// Query params
+?status=confirmed&userId=uid_123&role=tutor
+
+// Response (200 OK)
+{
+  success: true,
+  data: [
+    {
+      sessionId: "sess_abc123",
+      tutor: { /* tutor info */ },
+      tutee: { /* tutee info */ },
+      subject: "Calculus I",
+      scheduledAt: "2024-02-15T14:00:00Z",
+      status: "confirmed",
+      meetingLink: "https://zoom.us/j/xxx"
+    },
+    // ... more sessions
+  ]
+}
+```
+
+#### **GET /sessions/:sessionId**
+Get session details
+```javascript
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    sessionId: "sess_abc123",
+    tutor: { /* full tutor details */ },
+    tutee: { /* full tutee details */ },
+    subject: "Calculus I",
+    scheduledAt: "2024-02-15T14:00:00Z",
+    duration: 60,
+    status: "confirmed",
+    pricing: { /* pricing breakdown */ },
+    meetingLink: "https://zoom.us/j/xxx",
+    notes: { /* session notes */ }
+  }
+}
+```
+
+#### **PATCH /sessions/:sessionId**
+Update session (confirm/cancel)
+```javascript
+// Request (tutor confirms)
+{
+  status: "confirmed",
+  meetingLink: "https://zoom.us/j/customlink"
+}
+
+// Request (cancel)
+{
+  status: "cancelled",
+  reason: "Schedule conflict"
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: { /* updated session */ }
+}
+```
+
+#### **POST /sessions/:sessionId/complete**
+Mark session as completed
+```javascript
+// Request
+{
+  notes: "Covered derivatives and chain rule"
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    sessionId: "sess_abc123",
+    status: "completed"
+  }
+}
+```
+
+---
+
+### **Payment Endpoints**
+
+#### **POST /payments/create-intent**
+Create Stripe payment intent
+```javascript
+// Request
+{
+  sessionId: "sess_abc123",
+  amount: 1500  // cents ($15.00)
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    clientSecret: "pi_xxx_secret_yyy",
+    paymentIntentId: "pi_xxx"
+  }
+}
+```
+
+#### **POST /payments/confirm**
+Confirm payment after Stripe processing
+```javascript
+// Request
+{
+  sessionId: "sess_abc123",
+  paymentIntentId: "pi_xxx"
+}
+
+// Response (200 OK)
+{
+  success: true,
+  message: "Payment confirmed, session booked"
+}
+```
+
+#### **POST /payments/refund**
+Refund a payment
+```javascript
+// Request
+{
+  sessionId: "sess_abc123",
+  reason: "Session cancelled by tutor"
+}
+
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    refundId: "re_xxx",
+    amount: 1500
+  }
+}
+```
+
+#### **GET /payments/earnings**
+Get tutor earnings
+```javascript
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    totalEarnings: 345.75,
+    pendingPayout: 50.00,
+    availableBalance: 295.75,
+    transactions: [
+      {
+        date: "2024-02-10",
+        amount: 12.75,
+        sessionId: "sess_abc123",
+        status: "paid"
+      },
+      // ... more transactions
+    ]
+  }
+}
+```
+
+---
+
+### **Messaging Endpoints**
+
+#### **GET /messages/:conversationId**
+Get conversation messages
+```javascript
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    conversationId: "conv_uid1_uid2",
+    participants: [
+      { uid: "uid1", name: "John Doe" },
+      { uid: "uid2", name: "Jane Smith" }
+    ],
+    messages: [
+      {
+        messageId: "msg_123",
+        senderId: "uid1",
+        content: "Hi, can you help tomorrow?",
+        createdAt: "2024-02-12T10:00:00Z",
+        read: true
+      },
+      // ... more messages
+    ]
+  }
+}
+```
+
+#### **POST /messages**
+Send message
+```javascript
+// Request
+{
+  receiverId: "uid_receiver",
+  content: "Sounds good! See you then."
+}
+
+// Response (201 Created)
+{
+  success: true,
+  data: {
+    messageId: "msg_124",
+    conversationId: "conv_uid1_uid2",
+    createdAt: "2024-02-12T10:05:00Z"
+  }
+}
+```
+
+#### **GET /conversations**
+Get user's conversations
+```javascript
+// Response (200 OK)
+{
+  success: true,
+  data: [
+    {
+      conversationId: "conv_uid1_uid2",
+      otherUser: {
+        uid: "uid2",
+        name: "Jane Smith",
+        photoURL: "..."
+      },
+      lastMessage: {
+        content: "Sounds good!",
+        timestamp: "2024-02-12T10:05:00Z"
+      },
+      unreadCount: 2
+    },
+    // ... more conversations
+  ]
+}
+```
+
+---
+
+### **Review/Rating Endpoints**
+
+#### **POST /reviews**
+Submit review after session
+```javascript
+// Request
+{
+  sessionId: "sess_abc123",
+  rating: 5,
+  review: "Excellent tutor, very patient!",
+  tags: ["patient", "knowledgeable"]
+}
+
+// Response (201 Created)
+{
+  success: true,
+  data: {
+    reviewId: "rev_123",
+    updatedTutorRating: 4.8
+  }
+}
+```
+
+#### **GET /reviews/:userId**
+Get reviews for a user
+```javascript
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    averageRating: 4.8,
+    totalReviews: 23,
+    reviews: [
+      {
+        reviewId: "rev_123",
+        reviewer: {
+          name: "John Doe",
+          photoURL: "..."
+        },
+        rating: 5,
+        review: "Great tutor!",
+        tags: ["patient"],
+        helpful: 3,
+        createdAt: "2024-02-10T10:00:00Z"
+      },
+      // ... more reviews
+    ]
+  }
+}
+```
+
+---
+
+### **Analytics Endpoints** (Admin/SDG Metrics)
+
+#### **GET /analytics/dashboard**
+Get platform-wide metrics
+```javascript
+// Response (200 OK)
+{
+  success: true,
+  data: {
+    totalSessions: 543,
+    totalRevenue: 8145.00,
+    platformFees: 1221.75,
+    tutorEarnings: 6923.25,
+    activeUsers: 234,
+    averageRating: 4.7,
+    sdgMetrics: {
+      financialAidStudentsHelped: 34,  // SDG #10
+      totalTutorIncome: 6923.25,       // SDG #8
+      subjectsOffered: 45,              // SDG #4
+      sessionsCompleted: 543            // SDG #4
+    }
+  }
+}
+```
+
+---
+
+## 5. USER FLOW DIAGRAMS
+
+### **Flow 1: User Registration & Onboarding**
+
+```
+START
+  │
+  ▼
+[Landing Page]
+  │
+  ├─→ Click "Sign Up"
+  │
+  ▼
+[Registration Form]
+  │
+  ├─ Enter Email
+  ├─ Enter Password
+  ├─ Enter Name
+  ├─ Select Role (Tutor/Tutee/Both)
+  ├─ Accept Terms
+  │
+  ▼
+[Email Verification]
+  │
+  ├─ Check Email
+  ├─ Click Verification Link
+  │
+  ▼
+[Profile Setup]
+  │
+  ├─ Upload Photo
+  ├─ Add Bio
+  ├─ Select Major/Year
+  │
+  ▼
+[Role-Specific Setup]
+  │
+  ├─ IF Tutor:
+  │   ├─ Add Subjects
+  │   ├─ Set Hourly Rates
+  │   ├─ Set Availability
+  │   └─ Connect Stripe Account
+  │
+  ├─ IF Tutee:
+  │   └─ Add Payment Method
+  │
+  ▼
+[Dashboard]
+END
+```
+
+### **Flow 2: Finding & Booking a Tutor (Tutee Journey)**
+
+```
+START (Tutee logged in)
+  │
+  ▼
+[Dashboard]
+  │
+  ├─→ Click "Find a Tutor"
+  │
+  ▼
+[Search & Filter Page]
+  │
+  ├─ Enter Subject (e.g., "Calculus I")
+  ├─ Set Filters:
+  │   ├─ Price Range
+  │   ├─ Rating
+  │   ├─ Availability
+  │
+  ▼
+[Tutor List Results]
+  │
+  ├─ Browse Tutor Cards
+  ├─ View Ratings & Reviews
+  │
+  ├─→ Click on Tutor
+  │
+  ▼
+[Tutor Profile Page]
+  │
+  ├─ View Full Bio
+  ├─ Read Reviews
+  ├─ See Subjects & Rates
+  ├─ Check Availability Calendar
+  │
+  ├─→ Click "Book Session"
+  │
+  ▼
+[Booking Form]
+  │
+  ├─ Select Subject
+  ├─ Choose Date & Time
+  ├─ Select Duration
+  ├─ Add Notes (optional)
+  ├─ Review Price
+  │
+  ├─→ Click "Proceed to Payment"
+  │
+  ▼
+[Payment Page - Stripe]
+  │
+  ├─ Enter Card Details
+  ├─ Review Booking Summary
+  │
+  ├─→ Click "Confirm & Pay"
+  │
+  ▼
+[Payment Processing]
+  │
+  ├─ IF Success:
+  │   ▼
+  │ [Booking Confirmation]
+  │   ├─ Show Success Message
+  │   ├─ Send Email Confirmation
+  │   ├─ Notify Tutor
+  │   └─→ Redirect to Session Details
+  │
+  ├─ IF Failed:
+  │   ▼
+  │ [Error Message]
+  │   └─→ Retry Payment
+  │
+  ▼
+[Session Details Page]
+  │
+  ├─ View Session Info
+  ├─ Wait for Tutor Confirmation
+  ├─ Send Message to Tutor
+  │
+  ▼
+[Tutor Confirms] ← Tutor's action
+  │
+  ├─ Receive Confirmation Notification
+  ├─ Get Meeting Link
+  │
+  ▼
+[Before Session]
+  │
+  ├─ Receive Reminder (24hr, 1hr before)
+  │
+  ▼
+[Join Session]
+  │
+  ├─→ Click Meeting Link
+  ├─ Join Zoom/Meet
+  │
+  ▼
+[Session Completed]
+  │
+  ├─ Mark as Complete
+  │
+  ▼
+[Leave Review]
+  │
+  ├─ Rate Tutor (1-5 stars)
+  ├─ Write Review
+  ├─ Add Tags
+  │
+  ├─→ Submit Review
+  │
+  ▼
+[Dashboard]
+  │
+  ├─ View Past Sessions
+  ├─ Book Another Session
+  │
+END
+```
+
+### **Flow 3: Receiving & Managing Bookings (Tutor Journey)**
+
+```
+START (Tutor logged in)
+  │
+  ▼
+[Dashboard]
+  │
+  ├─ View Upcoming Sessions
+  ├─ Check Earnings
+  │
+  ▼
+[Receive Booking Request] ← Notification
+  │
+  ├─ Push Notification
+  ├─ Email Alert
+  │
+  ├─→ Click Notification
+  │
+  ▼
+[Session Request Page]
+  │
+  ├─ View Tutee Info
+  ├─ See Requested Time
+  ├─ Read Tutee's Notes
+  ├─ Check Calendar
+  │
+  ├─→ Decision Point
+  │
+  ├─ Option A: Accept
+  │   ├─ Add/Confirm Meeting Link
+  │   ├─ Add Notes for Tutee
+  │   └─→ Click "Confirm Session"
+  │       │
+  │       ▼
+  │     [Session Confirmed]
+  │       ├─ Notify Tutee
+  │       ├─ Add to Calendar
+  │       └─ Payment Held in Escrow
+  │
+  ├─ Option B: Decline
+  │   ├─ Select Reason
+  │   └─→ Click "Decline"
+  │       │
+  │       ▼
+  │     [Session Cancelled]
+  │       ├─ Notify Tutee
+  │       └─ Refund Initiated
+  │
+  ▼
+[Before Session]
+  │
+  ├─ Receive Reminders
+  ├─ Prepare Materials
+  ├─ Message Tutee if needed
+  │
+  ▼
+[Conduct Session]
+  │
+  ├─ Join Meeting Link
+  ├─ Teach/Help Student
+  │
+  ▼
+[After Session]
+  │
+  ├─→ Click "Mark as Complete"
+  │
+  ▼
+[Add Session Notes]
+  │
+  ├─ Document what was covered
+  ├─ Add recommendations
+  │
+  ├─→ Submit
+  │
+  ▼
+[Payment Released]
+  │
+  ├─ Platform Fee Deducted (15%)
+  ├─ Earnings Added to Balance
+  ├─ View in Earnings Dashboard
+  │
+  ▼
+[Receive Review from Tutee]
+  │
+  ├─ Notification of New Review
+  ├─ Rating Updated
+  │
+  ▼
+[Dashboard]
+  │
+  ├─ Check Next Session
+  ├─ Update Availability if needed
+  │
+END
+```
+
+### **Flow 4: Messaging Between Tutor & Tutee**
+
+```
+START
+  │
+  ▼
+[Either User's Dashboard]
+  │
+  ├─→ Click "Messages"
+  │
+  ▼
+[Conversations List]
+  │
+  ├─ View Active Conversations
+  ├─ See Unread Count
+  │
+  ├─→ Click on Conversation OR Start New
+  │
+  ▼
+[Chat Interface]
+  │
+  ├─ View Message History
+  ├─ See User Online Status
+  │
+  ├─→ Type Message
+  │
+  ▼
+[Send Message]
+  │
+  ├─ Click Send Button
+  │
+  ▼
+[Message Delivered]
+  │
+  ├─ Real-time Update (Firebase)
+  ├─ Notification to Recipient
+  │
+  ▼
+[Recipient Receives]
+  │
+  ├─ Push Notification (if offline)
+  ├─ In-app Badge Update
+  │
+  ├─→ Opens Message
+  │
+  ▼
+[Read Receipt]
+  │
+  ├─ Mark as Read
+  ├─ Update Sender's View
+  │
+  ▼
+[Continue Conversation]
+  │
+  ├─ Back-and-forth Messages
+  ├─ Quick Actions:
+  │   ├─ "Book a Session"
+  │   └─ "View Profile"
+  │
+END
+```
+
+### **Flow 5: Payment & Earnings Flow**
+
+```
+TUTEE SIDE:                          PLATFORM:                          TUTOR SIDE:
+
+[Books Session]                                                         [Receives Request]
+      │                                                                        │
+      ▼                                                                        ▼
+[Enters Payment Info] ──────────────→ [Create Payment Intent]         [Accepts Session]
+      │                               (Stripe API)                           │
+      ▼                                      │                               ▼
+[Pays $15.00] ──────────────────────────────┼────────────→ [Payment Held in Escrow]
+      │                                      │                               │
+      ▼                                      ▼                               │
+[Payment Confirmed]                   [Store Transaction]                   │
+      │                               [Status: Pending]                      │
+      ▼                                      │                               │
+                                             │                               │
+                              ═══════ SESSION OCCURS ═══════                │
+                                             │                               │
+                                             ▼                               ▼
+                              [Session Marked Complete]          [Session Completed]
+                                             │                               │
+                                             ▼                               ▼
+                              [Calculate Split:]              [Earnings Calculated]
+                              - Platform: $2.25 (15%)                       │
+                              - Tutor: $12.75 (85%)                        │
+                                             │                               ▼
+                                             ▼                    [View in Earnings Dashboard]
+                              [Transfer to Tutor] ────────────→  - Pending: $12.75
+                              (Stripe Connect)                              │
+                                             │                               │
+                                             ▼                               ▼
+                              [Payout Schedule:]              [Weekly/Monthly Payout]
+                              - Daily: Min $25                              │
+                              - Weekly: Min $50                             ▼
+                              - Monthly: Any amount          [Transferred to Bank Account]
+                                                                            │
+                                                                            ▼
+                                                               [Check Bank Account]
+                                                               [$12.75 Received]
+```
+
+---
+
+## 6. TECHNICAL IMPLEMENTATION
+
+### **6.1 Authentication Implementation**
+
+#### **Firebase Auth Setup**
+
+```typescript
+// lib/firebase.ts
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+};
+
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+```
+
+#### **Auth Context (React)**
+
+```typescript
+// contexts/AuthContext.tsx
+import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+interface AuthContextType {
+  user: User | null;
+  userData: any;
+  loading: boolean;
+  signup: (email: string, password: string, data: any) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+      if (user) {
+        // Fetch user data from Firestore
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        setUserData(userDoc.data());
+      } else {
+        setUserData(null);
+      }
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  async function signup(email: string, password: string, data: any) {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Create user document in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      role: data.role,
+      profile: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        university: data.university,
+        verified: false
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+  }
+
+  async function login(email: string, password: string) {
+    await signInWithEmailAndPassword(auth, email, password);
+  }
+
+  async function logout() {
+    await signOut(auth);
+  }
+
+  const value = {
+    user,
+    userData,
+    loading,
+    signup,
+    login,
+    logout
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+}
+```
+
+### **6.2 Stripe Payment Integration**
+
+#### **Stripe Setup (Backend)**
+
+```typescript
+// lib/stripe.ts
+import Stripe from 'stripe';
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2023-10-16'
+});
+```
+
+#### **Create Payment Intent API**
+
+```typescript
+// app/api/payments/create-intent/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { stripe } from '@/lib/stripe';
+import { db } from '@/lib/firebase-admin'; // Server-side Firebase
+
+export async function POST(req: NextRequest) {
+  try {
+    const { sessionId, amount } = await req.json();
+    
+    // Get session details
+    const sessionDoc = await db.collection('sessions').doc(sessionId).get();
+    const session = sessionDoc.data();
+    
+    // Calculate platform fee (15%)
+    const platformFee = Math.round(amount * 0.15);
+    const tutorEarnings = amount - platformFee;
+    
+    // Create payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: 'usd',
+      metadata: {
+        sessionId: sessionId,
+        tutorId: session.tutorId,
+        tuteeId: session.tuteeId
+      },
+      application_fee_amount: platformFee,
+      transfer_data: {
+        destination: session.tutorStripeAccountId // Tutor's connected account
+      }
+    });
+    
+    // Update session with payment intent
+    await sessionDoc.ref.update({
+      paymentIntentId: paymentIntent.id,
+      paymentStatus: 'pending'
+    });
+    
+    return NextResponse.json({
+      success: true,
+      data: {
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      }
+    });
+  } catch (error) {
+    console.error('Payment intent creation failed:', error);
+    return NextResponse.json(
+      { success: false, error: 'Payment failed' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+#### **Payment Form (Frontend)**
+
+```typescript
+// components/PaymentForm.tsx
+import { useState } from 'react';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+
+export function PaymentForm({ sessionId, amount, onSuccess }: any) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      // Create payment intent
+      const response = await fetch('/api/payments/create-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, amount })
+      });
+      
+      const { data } = await response.json();
+      
+      // Confirm payment
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
+        data.clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(CardElement)!,
+          }
+        }
+      );
+      
+      if (stripeError) {
+        setError(stripeError.message || 'Payment failed');
+      } else if (paymentIntent.status === 'succeeded') {
+        // Confirm payment in backend
+        await fetch('/api/payments/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            paymentIntentId: paymentIntent.id
+          })
+        });
+        
+        onSuccess();
+      }
+    } catch (err) {
+      setError('Payment processing failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <CardElement />
+      {error && <p className="text-red-500">{error}</p>}
+      <button type="submit" disabled={!stripe || loading}>
+        {loading ? 'Processing...' : `Pay $${(amount / 100).toFixed(2)}`}
+      </button>
+    </form>
+  );
+}
+```
+
+### **6.3 Real-Time Messaging Implementation**
+
+#### **Send Message Function**
+
+```typescript
+// lib/messaging.ts
+import { db } from './firebase';
+import {
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  increment
+} from 'firebase/firestore';
+
+export async function sendMessage(
+  senderId: string,
+  receiverId: string,
+  content: string
+) {
+  // Create conversation ID (sorted user IDs for consistency)
+  const conversationId = [senderId, receiverId].sort().join('_');
+  
+  // Add message to messages collection
+  const messageRef = await addDoc(collection(db, 'messages'), {
+    conversationId,
+    senderId,
+    receiverId,
+    content,
+    type: 'text',
+    read: false,
+    createdAt: serverTimestamp()
+  });
+  
+  // Update or create conversation document
+  const conversationRef = doc(db, 'conversations', conversationId);
+  await setDoc(
+    conversationRef,
+    {
+      conversationId,
+      participants: [senderId, receiverId],
+      lastMessage: {
+        content,
+        senderId,
+        timestamp: serverTimestamp()
+      },
+      [`unreadCount.${receiverId}`]: increment(1),
+      updatedAt: serverTimestamp()
+    },
+    { merge: true }
+  );
+  
+  return messageRef.id;
+}
+```
+
+#### **Chat Component with Real-Time Updates**
+
+```typescript
+// components/Chat.tsx
+import { useEffect, useState } from 'react';
+import { db } from '@/lib/firebase';
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot
+} from 'firebase/firestore';
+import { sendMessage } from '@/lib/messaging';
+
+export function Chat({ conversationId, currentUserId }: any) {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+
+  useEffect(() => {
+    // Subscribe to real-time messages
+    const q = query(
+      collection(db, 'messages'),
+      where('conversationId', '==', conversationId),
+      orderBy('createdAt', 'asc')
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const msgs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setMessages(msgs);
+    });
+
+    return () => unsubscribe();
+  }, [conversationId]);
+
+  async function handleSend(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
+
+    const [userId1, userId2] = conversationId.split('_');
+    const receiverId = userId1 === currentUserId ? userId2 : userId1;
+
+    await sendMessage(currentUserId, receiverId, newMessage);
+    setNewMessage('');
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto p-4">
+        {messages.map((msg: any) => (
+          <div
+            key={msg.id}
+            className={`mb-2 ${
+              msg.senderId === currentUserId ? 'text-right' : 'text-left'
+            }`}
+          >
+            <div
+              className={`inline-block px-4 py-2 rounded-lg ${
+                msg.senderId === currentUserId
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200'
+              }`}
+            >
+              {msg.content}
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <form onSubmit={handleSend} className="p-4 border-t">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="flex-1 px-4 py-2 border rounded-lg"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg"
+          >
+            Send
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+```
+
+---
+
+## 7. FEATURES BREAKDOWN
+
+### **Phase 1: MVP Features (Weeks 1-5)**
+
+#### **Must-Have:**
+1. ✅ User authentication (signup, login, email verification)
+2. ✅ User profiles (basic info, photo upload)
+3. ✅ Tutor profiles (add subjects, set rates, availability)
+4. ✅ Search & filter tutors
+5. ✅ Session booking workflow
+6. ✅ Stripe payment integration
+7. ✅ Basic messaging between users
+8. ✅ Session confirmation/cancellation
+9. ✅ Rating & review system
+10. ✅ Responsive design (mobile-friendly)
+
+#### **Nice-to-Have (if time permits):**
+- Email notifications (SendGrid)
+- Calendar integration (Google Calendar)
+- Session reminders (automated)
+- Admin dashboard (basic metrics)
+
+#### **Skip for MVP:**
+- Video calling built-in (use Zoom links)
+- Mobile app (web-responsive is enough)
+- Advanced analytics
+- Multi-campus support
+- Group sessions
+
+### **Phase 2: Post-MVP Enhancements**
+
+1. **Advanced Search:**
+   - Filter by university department
+   - Sort by distance (if on-campus meetings)
+   - Availability matching
+
+2. **Enhanced Profiles:**
+   - Video introductions
+   - Certification uploads
+   - Course completion badges
+
+3. **Smart Features:**
+   - AI-powered tutor recommendations
+   - Automated scheduling suggestions
+   - Price optimization based on demand
+
+4. **Community Features:**
+   - Study group formation
+   - Subject-specific forums
+   - Resource sharing (notes, study guides)
+
+5. **Monetization Expansion:**
+   - Subscription tiers (unlimited sessions)
+   - Featured tutor listings
+   - Tutor verification badges ($)
+
+---
+
+## 8. SDG ALIGNMENT & METRICS
+
+### **SDG #4: Quality Education**
+
+**How StudyBuddy Supports It:**
+- Provides affordable access to academic support
+- Enables peer-to-peer learning (proven effective)
+- Increases availability of tutoring (24/7 online platform)
+- Diversifies subject coverage (student-driven)
+
+**Metrics to Track:**
+- Total tutoring sessions completed
+- Number of unique subjects offered
+- Student grade improvements (survey-based)
+- Students helped per semester
+- Average session rating
+- Retention rate (students booking 2+ sessions)
+
+**Target Goals (Semester 1):**
+- 500+ sessions completed
+- 40+ subjects offered
+- 200+ students helped
+- 4.5+ average rating
+
+### **SDG #8: Decent Work and Economic Growth**
+
+**How StudyBuddy Supports It:**
+- Creates flexible income opportunities for students
+- Develops marketable teaching/communication skills
+- Provides transparent, fair compensation
+- Enables students to earn while studying
+
+**Metrics to Track:**
+- Total earnings paid to tutors
+- Number of active tutors
+- Average tutor hourly earnings
+- Percentage of tutors using income for tuition/expenses
+- Hours of paid work created
+
+**Target Goals (Semester 1):**
+- $10,000+ paid to tutors
+- 50+ active tutors
+- $15/hour average tutor earnings
+- 500+ hours of paid work created
+
+### **SDG #10: Reduced Inequalities**
+
+**How StudyBuddy Supports It:**
+- Charges 50-70% less than professional tutors
+- Enables low-income students to access help
+- Creates income for students needing financial support
+- Removes geographic barriers (online platform)
+
+**Metrics to Track:**
+- Number of financial aid students served (both as tutors and tutees)
+- Price comparison vs. traditional tutoring
+- Students who couldn't afford alternatives
+- Scholarship/discount sessions provided
+
+**Target Goals (Semester 1):**
+- 30%+ of users are financial aid recipients
+- 75% cost savings vs. traditional tutoring
+- 50+ students report "couldn't afford alternatives"
+- 10% of sessions offered at discounted rates
+
+### **Impact Dashboard Design**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              STUDYBUDDY IMPACT DASHBOARD                │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  SDG #4: QUALITY EDUCATION                             │
+│  ┌───────────┬───────────┬──────────┬────────────┐    │
+│  │  Sessions │ Subjects  │ Students │ Avg Rating │    │
+│  │    543    │    45     │   234    │    4.7★    │    │
+│  └───────────┴───────────┴──────────┴────────────┘    │
+│                                                         │
+│  SDG #8: DECENT WORK                                   │
+│  ┌────────────┬──────────┬─────────────┬──────────┐   │
+│  │   Tutors   │ Total $  │  Avg $/hr   │  Hours   │   │
+│  │     87     │ $8,234   │    $15.17   │   543    │   │
+│  └────────────┴──────────┴─────────────┴──────────┘   │
+│                                                         │
+│  SDG #10: REDUCED INEQUALITIES                         │
+│  ┌──────────────┬───────────────┬──────────────┐      │
+│  │ Financial Aid│ Cost Savings  │ Discount $   │      │
+│  │   Students   │  vs. Market   │  Provided    │      │
+│  │      78      │      68%      │    $450      │      │
+│  └──────────────┴───────────────┴──────────────┘      │
+│                                                         │
+│  [Download Full Report] [Share Impact]                 │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 9. REVENUE MODEL DETAILS
+
+### **Revenue Streams**
+
+#### **Primary: Commission Model**
+- **Rate:** 15% of every transaction
+- **Calculation:** Tutor charges $15/hour → Platform takes $2.25
+- **Payout:** Tutor receives $12.75
+- **When:** Deducted automatically at payment processing
+
+#### **Secondary: Subscription (Future)**
+- **Student Plan:** $8/month for unlimited sessions
+- **Tutor Plan:** $5/month for enhanced profile features
+  - Featured listing in search
+  - Priority support
+  - Verification badge
+  - Analytics dashboard
+
+#### **Tertiary: Premium Features (Future)**
+- **Urgent Booking Fee:** $2 for same-day bookings
+- **Certification Verification:** $10 one-time for verified badges
+- **Promoted Listings:** $10/week for top search placement
+
+### **Unit Economics**
+
+#### **Per Session Economics:**
+```
+Student pays:         $15.00  (100%)
+Platform fee (15%):    $2.25
+Stripe fee (2.9%):     $0.44
+Net platform revenue:  $1.81
+
+Tutor receives:       $12.75  (85%)
+
+Platform margin:       12.1%  (after payment processing)
+```
+
+#### **Break-Even Analysis:**
+
+**Monthly Fixed Costs:**
+- Hosting (Vercel): $20
+- Database (Firebase): $25 (beyond free tier)
+- Email (SendGrid): $15
+- Domain & SSL: $2
+- **Total Fixed: $62/month**
+
+**Break-even sessions:**
+$62 / $1.81 = 35 sessions per month
+
+**With 100 active users (50 tutors, 50 tutees):**
+- Average 2 sessions/student/month = 100 sessions
+- Revenue: 100 × $1.81 = $181/month
+- Profit: $181 - $62 = **$119/month** (~66% margin)
+
+**At Scale (500 users):**
+- 250 tutees × 2 sessions = 500 sessions/month
+- Revenue: 500 × $1.81 = $905/month
+- Costs: $62 + ($50 scaling costs) = $112
+- **Profit: $793/month = $9,516/year**
+
+### **Pricing Strategy**
+
+#### **Why 15% Commission?**
+- **Industry Standard:** Upwork (20%), Fiverr (20%), TaskRabbit (15-30%)
+- **Competitive:** Low enough to attract tutors
+- **Sustainable:** High enough to cover costs and profit
+- **Fair Value:** Platform provides discovery, payments, trust
+
+#### **Student Price Sensitivity:**
+```
+Traditional Tutoring:  $50-60/hour  → Too expensive
+StudyBuddy Peer:       $10-20/hour  → Affordable
+Cost Savings:          70-80%       → Clear value
+```
+
+#### **Tutor Earnings Competitiveness:**
+```
+Campus Job (Library):  $10-12/hour  → Similar pay, fixed schedule
+Retail Job:            $12-15/hour  → Similar pay, less flexible
+StudyBuddy (Net):      $12-17/hour  → Comparable, full flexibility
+Teaching Assistant:    $15-18/hour  → Slightly more, limited positions
+```
+
+### **Revenue Projections**
+
+#### **Conservative Scenario (Year 1):**
+- Students: 200 active
+- Avg sessions/student: 2/month
+- Sessions: 400/month = 4,800/year
+- Avg revenue/session: $1.81
+- **Annual Revenue: $8,688**
+- Annual Costs: $1,500
+- **Profit: $7,188**
+
+#### **Moderate Scenario (Year 2):**
+- Students: 500 active
+- Avg sessions/student: 2.5/month
+- Sessions: 1,250/month = 15,000/year
+- Avg revenue/session: $1.81
+- **Annual Revenue: $27,150**
+- Annual Costs: $3,000
+- **Profit: $24,150**
+
+#### **Optimistic Scenario (Year 3 - Multi-campus):**
+- 5 campuses, 300 students each = 1,500 students
+- Avg sessions/student: 3/month
+- Sessions: 4,500/month = 54,000/year
+- Avg revenue/session: $1.81
+- **Annual Revenue: $97,740**
+- Annual Costs: $12,000
+- **Profit: $85,740**
+
+---
+
+## 10. DEVELOPMENT TIMELINE
+
+### **Week-by-Week Breakdown**
+
+#### **Week 1: Setup & Authentication**
+**Days 1-2:** Project setup
+- Initialize Next.js project
+- Set up Tailwind CSS
+- Configure Firebase (Auth, Firestore, Storage)
+- Set up Git repository
+- Create basic folder structure
+
+**Days 3-5:** Authentication
+- Build signup page
+- Build login page
+- Implement Firebase Auth
+- Email verification flow
+- Protected routes setup
+- Auth context provider
+
+**Days 6-7:** Basic UI & Layout
+- Create main layout component
+- Build navigation/header
+- Design landing page
+- Mobile responsive adjustments
+
+**Deliverable:** Working authentication system
+
+---
+
+#### **Week 2: User Profiles**
+**Days 1-3:** Profile creation
+- User profile form (personal info)
+- Photo upload functionality
+- Firebase Storage integration
+- Profile view page
+
+**Days 4-5:** Tutor-specific features
+- Add subjects form
+- Set hourly rates
+- Availability calendar component
+- React Big Calendar integration
+
+**Days 6-7:** Profile editing
+- Edit profile form
+- Update subjects/rates
+- Delete subjects
+- Profile preview
+
+**Deliverable:** Complete profile management system
+
+---
+
+#### **Week 3: Search & Booking**
+**Days 1-3:** Tutor search
+- Search page UI
+- Filter components (subject, price, rating)
+- Firestore query implementation
+- Tutor card component
+- Search results list
+
+**Days 4-5:** Tutor detail page
+- Full tutor profile view
+- Reviews display
+- Availability calendar view
+- "Book Session" button
+
+**Days 6-7:** Booking flow
+- Booking form
+- Date/time picker
+- Duration selection
+- Booking summary
+- Availability validation
+
+**Deliverable:** Working search and booking interface
+
+---
+
+#### **Week 4: Payments & Stripe**
+**Days 1-2:** Stripe setup
+- Create Stripe account
+- Configure Stripe Connect
+- Install Stripe libraries
+- Set up webhook endpoint
+
+**Days 3-5:** Payment integration
+- Create payment intent API
+- Build payment form (Stripe Elements)
+- Confirm payment flow
+- Handle payment success/failure
+- Update session status
+
+**Days 6-7:** Tutor payouts
+- Connect tutor Stripe accounts
+- Transfer API implementation
+- Earnings dashboard
+- Transaction history
+
+**Deliverable:** End-to-end payment system
+
+---
+
+#### **Week 5: Messaging & Reviews**
+**Days 1-3:** Real-time messaging
+- Chat interface UI
+- Send message functionality
+- Real-time updates (Firestore listeners)
+- Conversations list
+- Unread message badges
+
+**Days 4-5:** Reviews & ratings
+- Review submission form
+- Display reviews on tutor profile
+- Calculate average ratings
+- Update tutor rating automatically
+
+**Days 6-7:** Polish & Testing
+- Bug fixes
+- UI/UX improvements
+- Mobile responsiveness check
+- Test all user flows
+- Performance optimization
+
+**Deliverable:** Feature-complete MVP
+
+---
+
+#### **Week 6: Testing & Launch Prep**
+**Days 1-3:** Beta testing
+- Recruit 10-15 beta testers
+- Monitor usage
+- Collect feedback
+- Fix critical bugs
+
+**Days 4-5:** Analytics & SDG metrics
+- Set up Google Analytics
+- Build impact dashboard
+- Create metrics tracking
+- Generate sample data for demo
+
+**Days 6-7:** Final preparation
+- Create demo video
+- Prepare presentation slides
+- Write documentation
+- Deploy to production
+
+**Deliverable:** Production-ready application + presentation
+
+---
+
+### **Development Tools & Workflow**
+
+#### **Code Editor:**
+- VS Code with extensions:
+  - ESLint
+  - Prettier
+  - Tailwind CSS IntelliSense
+  - Firebase Explorer
+
+#### **Version Control:**
+```bash
+# Git workflow
+main branch:      Production-ready code
+develop branch:   Integration branch
+feature/* branches: Individual features
+
+# Example
+git checkout -b feature/user-authentication
+git commit -m "Add Firebase auth integration"
+git push origin feature/user-authentication
+# Create pull request → Review → Merge to develop
+```
+
+#### **Deployment:**
+- **Vercel:** Automatic deployment on push to main
+- **Preview Deployments:** Every PR gets a unique URL
+- **Environment Variables:** Managed in Vercel dashboard
+
+#### **Testing Strategy:**
+```
+Manual Testing:
+- Test each feature during development
+- Cross-browser testing (Chrome, Firefox, Safari)
+- Mobile testing (iOS Safari, Chrome Android)
+- User flow testing (end-to-end journeys)
+
+Automated Testing (if time):
+- Unit tests for utility functions
+- Integration tests for API routes
+- E2E tests for critical flows (Playwright)
+```
+
+---
+
+### **Team Roles (if team project)**
+
+**Frontend Developer:**
+- React components
+- UI/UX implementation
+- Form validation
+- Responsive design
+
+**Backend Developer:**
+- API routes
+- Database schema
+- Stripe integration
+- Firebase configuration
+
+**Full-Stack Developer:**
+- Cross-functional tasks
+- Integration work
+- Bug fixes
+- Testing
+
+**Designer (Optional):**
+- UI mockups
+- Brand identity
+- User flow diagrams
+- Presentation materials
+
+---
+
+## CONCLUSION
+
+This is your complete blueprint for StudyBuddy. You now have:
+
+✅ Complete system architecture  
+✅ Full database schema  
+✅ All API endpoints documented  
+✅ User flow diagrams  
+✅ Technical implementation details  
+✅ SDG alignment framework  
+✅ Revenue model breakdown  
+✅ 6-week development timeline  
+
+**Next Steps:**
+1. Set up your development environment (today)
+2. Initialize Firebase project (today)
+3. Create Next.js project (Day 1)
+4. Start Week 1 tasks (authentication)
+5. Deploy early and often
+
+**Remember:**
+- Start simple, add complexity later
+- Test continuously
+- Get user feedback early
+- Focus on MVP first
+- Track SDG metrics from day 1
+
+**You have everything you need. Now build it.**

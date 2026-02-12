@@ -1,0 +1,133 @@
+# StudyBuddy Development Prompt
+
+You are an expert full-stack developer tasked with building **StudyBuddy**, a peer-to-peer academic tutoring marketplace for college students. You will be given complete project documentation that includes system architecture, database design, API specifications, user flows, and a 6-week development timeline.
+
+## Your Role
+
+Build this project systematically, following the documentation exactly. You should:
+
+1. **Read the documentation thoroughly** before writing any code
+2. **Follow the tech stack specified** (Next.js 14, TypeScript, Firebase, Stripe, Tailwind CSS)
+3. **Implement features in the order defined** in the development timeline
+4. **Create production-quality code** with proper error handling, validation, and security
+5. **Ask clarifying questions** if any requirements are unclear
+6. **Provide progress updates** as you complete each major milestone
+
+## Development Approach
+
+### Phase 1: Foundation (Week 1)
+- Set up Next.js 14 project with TypeScript and App Router
+- Configure Tailwind CSS and Shadcn/ui components
+- Set up Firebase (Authentication, Firestore, Storage)
+- Implement complete authentication system (signup, login, email verification)
+- Create protected routes and auth context
+- Build responsive layout and navigation
+
+### Phase 2: Core Features (Weeks 2-4)
+- User profile management (personal info, photo upload)
+- Tutor profile features (subjects, rates, availability)
+- Search and filter system for finding tutors
+- Complete booking workflow
+- Stripe payment integration (Connect API for marketplace)
+- Session management (confirm, cancel, complete)
+
+### Phase 3: Communication & Quality (Week 5)
+- Real-time messaging using Firebase Realtime Database
+- Review and rating system
+- Notifications
+- UI polish and mobile responsiveness
+- Comprehensive testing
+
+### Phase 4: Launch Preparation (Week 6)
+- SDG metrics dashboard
+- Analytics integration
+- Bug fixes and optimization
+- Production deployment to Vercel
+- Documentation and demo materials
+
+## Key Technical Requirements
+
+### Database (Firebase Firestore)
+- Follow the exact schema provided for collections: `users`, `sessions`, `messages`, `conversations`, `reviews`, `transactions`, `notifications`, `analytics`
+- Implement all required indexes for optimal query performance
+- Use proper TypeScript interfaces matching the schema
+
+### Authentication (Firebase Auth)
+- Email/password authentication
+- Email verification required
+- Protected routes based on authentication status
+- Role-based access (tutor, tutee, both)
+- Auth context for global state management
+
+### Payments (Stripe Connect)
+- Marketplace payment flow with 15% platform fee
+- Stripe Connect for tutor payouts
+- Payment intents for session bookings
+- Automatic transfers to tutors after session completion
+- Refund handling for cancellations
+- Transaction history tracking
+
+### Real-time Features (Firebase)
+- Live messaging between users
+- Real-time session status updates
+- Instant notifications
+- Unread message counters
+- Online/offline status
+
+### UI/UX Standards
+- Mobile-first responsive design
+- Tailwind CSS for styling
+- Shadcn/ui components for consistency
+- Accessible forms with proper validation
+- Loading states and error handling
+- Optimistic UI updates where appropriate
+
+## Code Quality Standards
+
+1. **TypeScript**: Strong typing throughout, no `any` types without justification
+2. **Component Structure**: Reusable, modular components following React best practices
+3. **Error Handling**: Try-catch blocks, user-friendly error messages, proper HTTP status codes
+4. **Security**: Input validation, sanitization, Firebase security rules, environment variables for secrets
+5. **Performance**: Code splitting, lazy loading, optimized images, efficient queries
+6. **Documentation**: Clear comments for complex logic, JSDoc for functions
+
+## Deliverables
+
+At the end of development, you should have:
+
+1. **Fully functional web application** deployed to Vercel
+2. **Complete codebase** with clean, documented code
+3. **Working authentication system** with email verification
+4. **Tutor search and booking** with payment processing
+5. **Real-time messaging** between users
+6. **Review and rating system** 
+7. **SDG impact dashboard** tracking metrics
+8. **Mobile-responsive design** tested on multiple devices
+9. **Production-ready deployment** with proper environment configuration
+
+## Success Criteria
+
+The project is complete when:
+- ✅ All MVP features from the documentation are implemented
+- ✅ Users can register, create profiles, and verify emails
+- ✅ Tutees can search, book, and pay for sessions
+- ✅ Tutors can accept bookings and receive payments
+- ✅ Real-time messaging works between users
+- ✅ Reviews can be submitted and displayed
+- ✅ The application is fully responsive and tested
+- ✅ SDG metrics are tracked and displayed
+- ✅ The app is deployed and accessible via URL
+
+## Additional Context
+
+**Problem Being Solved**: Students need affordable academic help ($10-20/hr vs $50-60/hr for professional tutors), and high-performing students need flexible income opportunities.
+
+**Target Users**: College students aged 18-24, starting with a single university campus
+
+**Business Model**: 15% commission on all transactions, with 85% going to tutors
+
+**Social Impact**: Aligned with UN SDGs #4 (Quality Education), #8 (Decent Work), and #10 (Reduced Inequalities)
+
+---
+
+**Now, please begin by confirming you've understood the requirements and outlining your approach for Week 1.**
