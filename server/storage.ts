@@ -581,23 +581,33 @@ export class DatabaseStorage implements IStorage {
   async sendMessage(senderId: string, receiverId: string, content: string): Promise<Message> {
     const conversation = await this.getOrCreateConversation(senderId, receiverId);
 
+    // Detect if this is a file attachment (JSON with dataUrl field)
+    let messageType = "text";
+    try {
+      const parsed = JSON.parse(content);
+      if (parsed && typeof parsed.dataUrl === "string" && parsed.name) {
+        messageType = "file";
+      }
+    } catch { /* regular text */ }
+
     const [message] = await db
       .insert(messages)
       .values({
         conversationId: conversation.id,
         senderId,
         content,
-        type: "text",
+        type: messageType,
         read: false,
       })
       .returning();
 
     // Update conversation's last message and unread count
     const isP1 = conversation.participant1Id === senderId;
+    const lastContent = messageType === "file" ? "📎 Attachment" : content;
     await db
       .update(conversations)
       .set({
-        lastMessageContent: content,
+        lastMessageContent: lastContent,
         lastMessageSenderId: senderId,
         lastMessageAt: new Date(),
         updatedAt: new Date(),
@@ -610,6 +620,7 @@ export class DatabaseStorage implements IStorage {
 
     return message;
   }
+
 
   async getMessages(conversationId: string, userId: string): Promise<Message[]> {
     return await db
