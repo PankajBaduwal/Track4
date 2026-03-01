@@ -1,13 +1,18 @@
 import * as React from "react";
 import { Link, useLocation } from "wouter";
 import {
-  CalendarClock,
+  BarChart3,
+  Briefcase,
   GraduationCap,
   LayoutDashboard,
   LogOut,
-  Search,
+  MessageCircle,
+  Plus,
   Settings2,
+  Trophy,
+  User,
 } from "lucide-react";
+import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/BrandMark";
@@ -17,9 +22,12 @@ import { useAuth } from "@/hooks/use-auth";
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, testId: "nav-dashboard" },
-  { href: "/find-tutors", label: "Find tutors", icon: Search, testId: "nav-find-tutors" },
-  { href: "/sessions", label: "Sessions", icon: CalendarClock, testId: "nav-sessions" },
-  { href: "/profile", label: "Profile", icon: GraduationCap, testId: "nav-profile" },
+  { href: "/gig-board", label: "Gig Board", icon: Briefcase, testId: "nav-gig-board" },
+  { href: "/post-gig", label: "Post a Gig", icon: Plus, testId: "nav-post-gig" },
+  { href: "/leaderboard", label: "Leaderboard", icon: Trophy, testId: "nav-leaderboard" },
+  { href: "/messages", label: "Messages", icon: MessageCircle, testId: "nav-messages" },
+  { href: "/analytics", label: "Analytics", icon: BarChart3, testId: "nav-analytics" },
+  { href: "/profile", label: "Profile", icon: User, testId: "nav-profile" },
 ];
 
 function TopBar({ title, right }: { title?: string; right?: React.ReactNode }) {
@@ -35,13 +43,16 @@ function TopBar({ title, right }: { title?: string; right?: React.ReactNode }) {
           >
             <div className="min-w-0">
               <div className="font-display text-xl tracking-tight sm:text-2xl">
-                {title ?? "StudyBuddy"}
+                {title ?? "Kai"}
               </div>
               <div className="mt-0.5 text-sm text-muted-foreground">
-                A calm, campus-first marketplace for tutoring.
+                Pocket money, real skills, trusted inside your college.
               </div>
             </div>
-            <div className="flex items-center gap-2">{right}</div>
+            <div className="flex items-center gap-2">
+              <NotificationDropdown />
+              {right}
+            </div>
           </div>
         </div>
       </div>
@@ -76,7 +87,7 @@ export function AppShell({
           data-testid="app-sidebar"
         >
           <SidebarHeader className="p-4">
-            <BrandMark subtitle="Campus tutoring marketplace" />
+            <BrandMark subtitle="Campus gig marketplace" />
           </SidebarHeader>
 
           <SidebarContent className="px-2 pb-2">
@@ -96,7 +107,7 @@ export function AppShell({
                           "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
                           "hover:bg-sidebar-accent/70 hover:shadow-sm",
                           active &&
-                            "bg-sidebar-accent ring-1 ring-sidebar-border shadow-sm",
+                          "bg-sidebar-accent ring-1 ring-sidebar-border shadow-sm",
                         )}
                         data-testid={item.testId}
                       >
@@ -128,7 +139,7 @@ export function AppShell({
                   <Button
                     type="button"
                     variant="secondary"
-                    onClick={() => (window.location.href = "/api/logout")}
+                    onClick={() => logout()}
                     disabled={isLoggingOut}
                     className="
                       rounded-xl border border-border/70 bg-card/60

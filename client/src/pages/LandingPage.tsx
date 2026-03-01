@@ -1,225 +1,191 @@
-import * as React from "react";
 import { Link } from "wouter";
-import { ArrowRight, BadgeCheck, CalendarClock, GraduationCap, Search, Shield } from "lucide-react";
-import { BrandMark } from "@/components/BrandMark";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Palette, Code2, BookOpen, Sparkles, ArrowRight, Zap, Users, Award, BarChart3, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-function Pill({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="
-        inline-flex items-center gap-2 rounded-full
-        border border-border/70 bg-card/60 px-3 py-1
-        text-xs text-muted-foreground backdrop-blur
-        shadow-sm
-      "
-    >
-      {children}
-    </span>
-  );
-}
-
 export default function LandingPage() {
   return (
-    <div className="min-h-screen mesh-campus">
-      <header className="sticky top-0 z-30">
-        <div className="glass">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-3">
-              <BrandMark subtitle="Clean, campus-first tutoring." />
-              <div className="flex items-center gap-2">
-                <ThemeToggle data-testid="landing-theme-toggle" />
-                <Button
-                  type="button"
-                  onClick={() => (window.location.href = "/api/login")}
-                  className="
-                    rounded-xl px-5
-                    bg-gradient-to-r from-primary to-primary/80
-                    text-primary-foreground shadow-lg shadow-primary/20
-                    hover:shadow-xl hover:shadow-primary/25 hover:-translate-y-0.5
-                    active:translate-y-0 active:shadow-md
-                    transition-all duration-200
-                  "
-                  data-testid="landing-login"
-                >
-                  Sign in <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7", fontFamily: "'DM Sans', sans-serif", color: "#1A1A2E" }}>
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-[#E5E5E0]">
+        <div className="flex items-center gap-2">
+          <div className="h-9 w-9 rounded-xl bg-[#4338CA] flex items-center justify-center">
+            <span className="text-white font-bold text-sm" style={{ fontFamily: "'Fraunces', serif" }}>K</span>
           </div>
+          <span className="font-bold text-lg" style={{ fontFamily: "'Fraunces', serif", color: "#4338CA" }}>Kai</span>
         </div>
-        <div className="h-px bg-border/70" />
-      </header>
+        <Link href="/auth">
+          <Button className="rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white px-6">
+            Sign In
+          </Button>
+        </Link>
+      </nav>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-7 animate-enter">
-            <div className="flex flex-wrap gap-2">
-              <Pill>
-                <BadgeCheck className="h-4 w-4 text-primary" />
-                Free to start
-              </Pill>
-              <Pill>
-                <Shield className="h-4 w-4 text-accent" />
-                Session-based workflow
-              </Pill>
-              <Pill>
-                <CalendarClock className="h-4 w-4 text-[hsl(var(--chart-3))]" />
-                Clear availability
-              </Pill>
-            </div>
-
-            <h1 className="mt-6 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
-              A calm marketplace for{" "}
-              <span className="text-primary">campus tutoring</span>—built for weeknight study sessions.
+      {/* Hero — Split Layout */}
+      <section className="px-6 md:px-12 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          {/* Left — Text */}
+          <div>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#F59E0B]/10 text-[#B45309] border border-[#F59E0B]/20 mb-6">
+              Engineering Track 4
+            </span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4" style={{ fontFamily: "'Fraunces', serif", color: "#1A1A2E" }}>
+              Kai Micro-Gig &<br />Peer Help Marketplace
             </h1>
-
-            <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl">
-              Find the right tutor by subject and rate. Build a profile that reads like a syllabus.
-              Book sessions with a clean timeline from request → confirmation → completion.
+            <p className="text-lg md:text-xl italic mb-6" style={{ color: "#4338CA", fontFamily: "'Fraunces', serif" }}>
+              "Pocket Money, Real Skills, Trusted Inside Your College"
             </p>
-
-            <div className="mt-7 flex flex-col sm:flex-row gap-3">
-              <Button
-                type="button"
-                onClick={() => (window.location.href = "/api/login")}
-                className="
-                  rounded-xl px-6 py-6 sm:py-5 text-base
-                  bg-gradient-to-r from-primary to-primary/85
-                  text-primary-foreground shadow-lg shadow-primary/20
-                  hover:shadow-xl hover:shadow-primary/25 hover:-translate-y-0.5
-                  active:translate-y-0 active:shadow-md
-                  transition-all duration-200
-                "
-                data-testid="landing-cta-primary"
-              >
-                Get started <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Link
-                href="/find-tutors"
-                className="
-                  inline-flex items-center justify-center rounded-xl border border-border/70
-                  bg-card/60 px-6 py-4 text-sm font-semibold
-                  hover:bg-card hover:shadow-sm hover:-translate-y-0.5
-                  transition-all duration-200
-                "
-                data-testid="landing-cta-secondary"
-              >
-                Explore tutors <Search className="ml-2 h-4 w-4" />
+            <p className="text-base leading-relaxed mb-8" style={{ color: "#555" }}>
+              Students want pocket money, portfolio projects, and skill-based learning — but trusted peer discovery doesn't exist inside college ecosystems. The talent is there; the marketplace isn't. <strong style={{ color: "#4338CA" }}>Kai can build it in a day.</strong>
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/auth">
+                <Button className="rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white h-12 px-8 text-base gap-2">
+                  Post a Gig <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/auth">
+                <Button variant="outline" className="rounded-xl h-12 px-8 text-base border-[#4338CA] text-[#4338CA] hover:bg-[#4338CA]/5">
+                  Find Help
+                </Button>
               </Link>
             </div>
-
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <Card className="rounded-2xl border border-card-border/70 bg-card/70 backdrop-blur shadow-sm noise-overlay">
-                <div className="p-4">
-                  <div className="grid h-10 w-10 place-items-center rounded-2xl border border-border/60 bg-muted/50">
-                    <Search className="h-4 w-4" />
-                  </div>
-                  <div className="mt-3 font-medium">Search fast</div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    Subject + rate filters that feel like a marketplace.
-                  </div>
-                </div>
-              </Card>
-              <Card className="rounded-2xl border border-card-border/70 bg-card/70 backdrop-blur shadow-sm noise-overlay">
-                <div className="p-4">
-                  <div className="grid h-10 w-10 place-items-center rounded-2xl border border-border/60 bg-muted/50">
-                    <GraduationCap className="h-4 w-4" />
-                  </div>
-                  <div className="mt-3 font-medium">Profiles that convert</div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    Subjects, proficiency, and clean availability windows.
-                  </div>
-                </div>
-              </Card>
-              <Card className="rounded-2xl border border-card-border/70 bg-card/70 backdrop-blur shadow-sm noise-overlay">
-                <div className="p-4">
-                  <div className="grid h-10 w-10 place-items-center rounded-2xl border border-border/60 bg-muted/50">
-                    <CalendarClock className="h-4 w-4" />
-                  </div>
-                  <div className="mt-3 font-medium">Session timeline</div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    Request, confirm, meet, complete—no confusion.
-                  </div>
-                </div>
-              </Card>
-            </div>
           </div>
 
-          <div className="lg:col-span-5 animate-enter" style={{ animationDelay: "120ms" }}>
-            <div className="relative rounded-3xl border border-card-border/70 bg-card/70 backdrop-blur shadow-lg noise-overlay overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,hsl(var(--primary)/0.18),transparent_45%),radial-gradient(circle_at_85%_25%,hsl(var(--accent)/0.16),transparent_50%)]" />
-              <div className="relative p-6 sm:p-7">
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-muted-foreground">Preview</div>
-                  <span className="rounded-full border border-border/70 bg-muted/50 px-3 py-1 text-xs">
-                    Marketplace card
-                  </span>
-                </div>
-
-                <div className="mt-5 rounded-2xl border border-border/70 bg-background/70 p-5 shadow-sm">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="font-display text-2xl tracking-tight">Calculus Tutor</div>
-                      <div className="mt-1 text-sm text-muted-foreground">
-                        “Proof-friendly explanations. Clean structure. Real problem sets.”
-                      </div>
-                    </div>
-                    <div className="rounded-2xl border border-border/70 bg-card px-3 py-2">
-                      <div className="text-xs text-muted-foreground">from</div>
-                      <div className="font-semibold">$25/hr</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    <div className="rounded-xl border border-border/60 bg-muted/40 px-3 py-2 text-xs">
-                      <div className="text-muted-foreground">Availability</div>
-                      <div className="font-medium">Tue • Thu</div>
-                    </div>
-                    <div className="rounded-xl border border-border/60 bg-muted/40 px-3 py-2 text-xs">
-                      <div className="text-muted-foreground">Proficiency</div>
-                      <div className="font-medium">Expert</div>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="button"
-                    onClick={() => (window.location.href = "/api/login")}
-                    className="
-                      mt-4 w-full rounded-xl
-                      bg-gradient-to-r from-primary to-primary/80
-                      text-primary-foreground shadow-lg shadow-primary/20
-                      hover:shadow-xl hover:shadow-primary/25 hover:-translate-y-0.5
-                      transition-all duration-200
-                    "
-                    data-testid="landing-preview-cta"
-                  >
-                    Sign in to book
-                  </Button>
-                </div>
-
-                <div className="mt-5 text-xs text-muted-foreground">
-                  Built for week 1: profiles, tutor discovery, and sessions. Payments later.
-                </div>
+          {/* Right — Image */}
+          <div className="relative">
+            <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+              <img src="/kai-hero.png" alt="Student working on laptop in a cafe" className="w-full h-auto object-cover" />
+            </div>
+            {/* Floating stats */}
+            <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg p-3 flex items-center gap-2 border">
+              <div className="h-8 w-8 rounded-lg bg-[#F59E0B]/10 flex items-center justify-center">
+                <Users className="h-4 w-4 text-[#F59E0B]" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Active Helpers</div>
+                <div className="font-bold text-sm">250+</div>
               </div>
             </div>
-
-            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-              <span>© {new Date().getFullYear()} StudyBuddy</span>
-              <button
-                type="button"
-                onClick={() => alert("Privacy policy coming soon.")}
-                className="hover:text-foreground transition-colors"
-                data-testid="landing-privacy"
-              >
-                Privacy
-              </button>
+            <div className="absolute -top-4 -right-4 bg-white rounded-xl shadow-lg p-3 flex items-center gap-2 border">
+              <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <Award className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Gigs Completed</div>
+                <div className="font-bold text-sm">1,200+</div>
+              </div>
             </div>
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* How It Works — Section from spec */}
+      <section className="px-6 md:px-12 py-16 md:py-24" style={{ backgroundColor: "#F5F5F0" }}>
+        <div className="max-w-7xl mx-auto">
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#4338CA]/10 text-[#4338CA] border border-[#4338CA]/20 mb-4">
+            Engineering Track 4 — Build Spec + Loop
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-12" style={{ fontFamily: "'Fraunces', serif" }}>
+            The Campus Gig Economy, Powered by Kai
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Left — What Students Can Post */}
+            <div>
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ fontFamily: "'Fraunces', serif" }}>
+                <Sparkles className="h-5 w-5 text-[#F59E0B]" /> What Students Can Post
+              </h3>
+              <div className="space-y-4">
+                <Card className="rounded-2xl p-5 border-l-4 border-l-[#F59E0B] bg-white shadow-sm hover:shadow-md transition-shadow hover:-translate-y-0.5 transition-transform">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Palette className="h-5 w-5 text-[#F59E0B]" />
+                    <span className="font-bold" style={{ fontFamily: "'Fraunces', serif" }}>🎨 Creative Gigs</span>
+                  </div>
+                  <p className="text-sm" style={{ color: "#666" }}>
+                    "Need poster design", "Need video edit", "Need PPT design" — quick creative tasks with fair pricing suggested by Kai
+                  </p>
+                </Card>
+
+                <Card className="rounded-2xl p-5 border-l-4 border-l-[#4338CA] bg-white shadow-sm hover:shadow-md transition-shadow hover:-translate-y-0.5 transition-transform">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Code2 className="h-5 w-5 text-[#4338CA]" />
+                    <span className="font-bold" style={{ fontFamily: "'Fraunces', serif" }}>💻 Tech Help</span>
+                  </div>
+                  <p className="text-sm" style={{ color: "#666" }}>
+                    "Need DSA mentor", "Need code review", "Need app testing partner" — peer-to-peer skill exchange
+                  </p>
+                </Card>
+
+                <Card className="rounded-2xl p-5 border-l-4 border-l-emerald-500 bg-white shadow-sm hover:shadow-md transition-shadow hover:-translate-y-0.5 transition-transform">
+                  <div className="flex items-center gap-3 mb-2">
+                    <BookOpen className="h-5 w-5 text-emerald-600" />
+                    <span className="font-bold" style={{ fontFamily: "'Fraunces', serif" }}>📚 Academic Help</span>
+                  </div>
+                  <p className="text-sm" style={{ color: "#666" }}>
+                    "Need lab report help", "Need exam prep partner", "Need project collaborator" — academic micro-tasks
+                  </p>
+                </Card>
+              </div>
+            </div>
+
+            {/* Right — How Kai Adds Value */}
+            <div>
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ fontFamily: "'Fraunces', serif" }}>
+                <Zap className="h-5 w-5 text-[#4338CA]" /> How Kai Adds Value
+              </h3>
+              <div className="space-y-4 mb-8">
+                {[
+                  { text: "Auto-writes a clean, professional gig post from a rough description", icon: "✅" },
+                  { text: "Matches helpers based on their listed skills and past work", icon: "✅" },
+                  { text: "Suggests fair pricing and realistic time estimates", icon: "✅" },
+                  { text: "Generates a Proof of Work card — a mini portfolio entry after each completed gig", icon: "✅" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-white border border-[#E5E5E0] shadow-sm">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 mt-0.5 shrink-0" />
+                    <span className="text-sm leading-relaxed">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Growth Loop */}
+              <Card className="rounded-2xl p-5 bg-gradient-to-br from-[#4338CA]/5 to-[#F59E0B]/5 border border-[#4338CA]/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="h-5 w-5 text-[#4338CA]" />
+                  <span className="font-bold text-sm" style={{ fontFamily: "'Fraunces', serif" }}>Growth Loop</span>
+                </div>
+                <p className="text-sm" style={{ color: "#555" }}>
+                  Weekly "Gig Board Digest" — a WhatsApp-forwardable summary of top open gigs + "Top Helpers of the Week" leaderboard. Every college gets its own board.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="px-6 md:px-12 py-16 md:py-24 text-center">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: "'Fraunces', serif" }}>
+            Ready to earn or get help?
+          </h2>
+          <p className="text-base mb-8" style={{ color: "#555" }}>
+            Join your college's micro-gig marketplace. Post a task, find skilled helpers, build your portfolio — all within your campus.
+          </p>
+          <Link href="/auth">
+            <Button className="rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white h-12 px-10 text-base gap-2">
+              Get Started <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-6 md:px-12 py-6 border-t border-[#E5E5E0] text-center">
+        <p className="text-xs" style={{ color: "#999" }}>
+          © 2026 Kai • Campus Gig Marketplace • Built for Engineering Track 4
+        </p>
+      </footer>
     </div>
   );
 }

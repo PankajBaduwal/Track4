@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, CalendarClock, Clock, GraduationCap, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, CalendarClock, Clock, GraduationCap, MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,10 @@ import { useTutorDetail } from "@/hooks/use-tutors";
 import { useCreateSession } from "@/hooks/use-sessions";
 import { BookSessionDialog } from "@/components/forms/BookSessionDialog";
 import { useToast } from "@/hooks/use-toast";
+import { useReviewsForUser } from "@/hooks/use-reviews";
+import { ReviewList } from "@/components/ReviewList";
+import { useAuth } from "@/hooks/use-auth";
+import { Link as WouterLink } from "wouter";
 
 const dayLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -23,6 +27,8 @@ export default function TutorDetailPage() {
 
   const detail = useTutorDetail(tutorId);
   const createSession = useCreateSession();
+  const { data: authUser } = useAuth();
+  const reviewsQuery = useReviewsForUser(tutorId);
 
   const [bookOpen, setBookOpen] = React.useState(false);
 
@@ -113,6 +119,16 @@ export default function TutorDetailPage() {
                       <CalendarClock className="h-4 w-4" />
                       <span className="ml-2 hidden sm:inline">Book</span>
                     </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => (window.location.href = `/messages`)}
+                      className="rounded-xl"
+                      data-testid="tutor-detail-message"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span className="ml-2 hidden sm:inline">Message</span>
+                    </Button>
                   </div>
 
                   <div className="mt-4 text-sm text-muted-foreground">
@@ -188,6 +204,24 @@ export default function TutorDetailPage() {
                       ) : null}
                     </div>
                   ))}
+                </div>
+              </div>
+            </Card>
+
+            {/* Reviews */}
+            <Card className="rounded-3xl border border-card-border/70 bg-card shadow-sm noise-overlay">
+              <div className="p-6">
+                <div className="font-display text-2xl tracking-tight">Reviews</div>
+                <div className="mt-4">
+                  {reviewsQuery.isLoading ? (
+                    <div className="text-sm text-muted-foreground">Loading reviews...</div>
+                  ) : (
+                    <ReviewList
+                      reviews={(reviewsQuery.data as any)?.reviews ?? []}
+                      averageRating={(reviewsQuery.data as any)?.averageRating ?? null}
+                      totalReviews={(reviewsQuery.data as any)?.totalReviews ?? 0}
+                    />
+                  )}
                 </div>
               </div>
             </Card>
