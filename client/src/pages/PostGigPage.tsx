@@ -36,9 +36,9 @@ export default function PostGigPage() {
 
     const handleEnhance = async () => {
         const result = await aiEnhance.mutateAsync({ title, description, category });
-        setEnhancedDescription(result.enhancedDescription);
+        if (result.enhancedDescription) setDescription(result.enhancedDescription);
         if (result.suggestedTitle) setTitle(result.suggestedTitle);
-        toast({ title: "✨ Enhanced by Kai!", description: "Your gig description has been polished." });
+        toast({ title: "✨ Enhanced by Kai!", description: "Your gig description has been polished and filled in." });
     };
 
     const handleSuggestPrice = async () => {
@@ -164,7 +164,33 @@ export default function PostGigPage() {
 
                         {/* Skills */}
                         <div>
-                            <Label htmlFor="skills" className="text-sm font-medium">Skills Required</Label>
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="skills" className="text-sm font-medium">Skills Required</Label>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                        const categorySkills: Record<string, string[]> = {
+                                            creative: ["Graphic Design", "Poster Design", "Video Editing", "PowerPoint", "Illustration", "Canva", "Figma", "Adobe Photoshop"],
+                                            tech: ["JavaScript", "Python", "React", "DSA", "Code Review", "Testing", "Git", "API Development"],
+                                            academic: ["Research", "Report Writing", "Data Analysis", "Excel", "LaTeX", "Presentation", "Proofreading", "Note-Taking"],
+                                        };
+                                        const base = categorySkills[category] ?? categorySkills.academic;
+                                        // Pick 3-5 relevant skills, biased by title/description keywords
+                                        const text = `${title} ${description}`.toLowerCase();
+                                        const relevant = base.filter(s => text.includes(s.toLowerCase().split(" ")[0]));
+                                        const pick = relevant.length >= 3 ? relevant.slice(0, 5) : [...relevant, ...base.filter(s => !relevant.includes(s))].slice(0, 4);
+                                        setSkills(pick.join(", "));
+                                        toast({ title: "🧠 Skills suggested!", description: `${pick.length} skills added based on your gig category.` });
+                                    }}
+                                    disabled={!title}
+                                    className="rounded-lg text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20 gap-1.5"
+                                >
+                                    <Sparkles className="h-3.5 w-3.5" />
+                                    Suggest Skills
+                                </Button>
+                            </div>
                             <Input
                                 id="skills"
                                 value={skills}

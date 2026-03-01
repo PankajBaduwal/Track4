@@ -43,6 +43,19 @@ export function useSendMessage() {
             if (!res.ok) throw new Error(await parseErrorMessage(res));
             return await readJson(res);
         },
+        onMutate: async (input) => {
+            // Optimistic: add message to all matching queries instantly
+            const allKeys = qc.getQueryCache().findAll({ queryKey: ["messages"] });
+            for (const q of allKeys) {
+                const prev = qc.getQueryData(q.queryKey) as any[] | undefined;
+                if (prev) {
+                    qc.setQueryData(q.queryKey, [
+                        ...prev,
+                        { id: `temp-${Date.now()}`, content: input.content, senderId: "__self__", createdAt: new Date().toISOString(), read: false },
+                    ]);
+                }
+            }
+        },
         onSuccess: async (data: any) => {
             await qc.invalidateQueries({ queryKey: ["messages", data?.conversationId] });
             await qc.invalidateQueries({ queryKey: [api.conversations.list.path] });

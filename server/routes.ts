@@ -462,6 +462,18 @@ export async function registerRoutes(
         data: { gigId: req.params.gigId },
       });
     }
+
+    // If rejected, notify the applicant
+    if (req.body.status === "rejected") {
+      const gig = await storage.getGig(req.params.gigId);
+      await storage.createNotification({
+        userId: updated.applicantId,
+        type: "gig_rejected",
+        title: "Application not selected",
+        body: `Your application for "${gig?.title ?? "a gig"}" was not selected this time.`,
+        data: { gigId: req.params.gigId },
+      });
+    }
     res.json(updated);
   });
 

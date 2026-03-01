@@ -134,25 +134,6 @@ export function AppShell({
                 <div className="mt-1 font-medium truncate" data-testid="sidebar-user-name">
                   {displayName}
                 </div>
-                <div className="mt-3 flex items-center gap-2">
-                  <ThemeToggle data-testid="sidebar-theme-toggle" />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => logout()}
-                    disabled={isLoggingOut}
-                    className="
-                      rounded-xl border border-border/70 bg-card/60
-                      hover:bg-card hover:shadow-sm transition-all duration-200
-                    "
-                    data-testid="sidebar-logout"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span className="ml-2 hidden sm:inline">
-                      {isLoggingOut ? "Logging out..." : "Logout"}
-                    </span>
-                  </Button>
-                </div>
               </div>
             </div>
           </SidebarContent>

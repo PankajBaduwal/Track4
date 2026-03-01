@@ -283,6 +283,26 @@ export function ChatInterface({
                             <Smile className="h-4.5 w-4.5" />
                         </Button>
                         <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
+                            title="Attach file"
+                            onClick={() => {
+                                const input = document.createElement("input");
+                                input.type = "file";
+                                input.accept = "image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.txt";
+                                input.onchange = (e: any) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setInput((prev: string) => prev + (prev ? " " : "") + `📎 [${file.name}]`);
+                                    }
+                                };
+                                input.click();
+                            }}
+                        >
+                            <Paperclip className="h-4 w-4" />
+                        </Button>
+                        <Button
                             size="icon"
                             onClick={handleSend}
                             disabled={!input.trim() || sendMessage.isPending}

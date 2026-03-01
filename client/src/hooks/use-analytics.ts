@@ -10,5 +10,6 @@ export function useDashboardAnalytics() {
             if (!res.ok) throw new Error(await parseErrorMessage(res));
             return await readJson(res);
         },
+        refetchInterval: 15000, // auto-refresh every 15s for real-time updates
     });
 }

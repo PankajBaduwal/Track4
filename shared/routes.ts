@@ -69,8 +69,8 @@ export const api = {
           minRateCents: z.coerce.number().int().nonnegative().optional(),
           maxRateCents: z.coerce.number().int().nonnegative().optional(),
           isActive: z
-            .union([z.literal("true"), z.literal("false")])
-            .transform((v) => v === "true")
+            .union([z.literal("true"), z.literal("false"), z.boolean()])
+            .transform((v) => v === "true" || v === true)
             .optional(),
         })
         .optional(),

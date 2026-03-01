@@ -31,6 +31,17 @@ const statusColors: Record<string, string> = {
     cancelled: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
 };
 
+function sortApplications(apps: any[], sort: "price" | "status" | "name") {
+    const sorted = [...apps];
+    if (sort === "price") sorted.sort((a, b) => (a.proposedPriceCents ?? 99999) - (b.proposedPriceCents ?? 99999));
+    else if (sort === "status") {
+        const order: Record<string, number> = { accepted: 0, pending: 1, rejected: 2 };
+        sorted.sort((a, b) => (order[a.status] ?? 3) - (order[b.status] ?? 3));
+    }
+    else if (sort === "name") sorted.sort((a, b) => (a.applicant?.firstName ?? "").localeCompare(b.applicant?.firstName ?? ""));
+    return sorted;
+}
+
 export default function GigDetailPage() {
     const [, params] = useRoute("/gigs/:gigId");
     const gigId = params?.gigId;
@@ -49,6 +60,7 @@ export default function GigDetailPage() {
     const [reviewText, setReviewText] = React.useState("");
     const [resourceLink, setResourceLink] = React.useState("");
     const [sharedResources, setSharedResources] = React.useState<Array<{ text: string; by: string; at: string }>>([]);
+    const [appSort, setAppSort] = React.useState<"price" | "status" | "name">("status");
 
     const gig = gigQuery.data as any;
     if (gigQuery.isLoading) return <AppShell title="Loading..."><div className="animate-pulse h-96 rounded-2xl bg-muted/50" /></AppShell>;
@@ -186,9 +198,23 @@ export default function GigDetailPage() {
                 {/* Applications (for owners) */}
                 {isOwner && gig.applications?.length > 0 && (
                     <Card className="rounded-2xl mt-4 p-5 border border-card-border/70">
-                        <h3 className="font-display text-lg mb-3">Applications ({gig.applications.length})</h3>
+                        <div className="flex items-center justify-between mb-3">
+                            <h3 className="font-display text-lg">Applications ({gig.applications.length})</h3>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-xs text-muted-foreground">Sort:</span>
+                                {["price", "status", "name"].map((s) => (
+                                    <button
+                                        key={s}
+                                        onClick={() => setAppSort(s as any)}
+                                        className={`text-xs px-2 py-1 rounded-lg border transition-all ${appSort === s ? "bg-violet-100 dark:bg-violet-900/30 border-violet-300 text-violet-700 dark:text-violet-300 font-medium" : "border-border/50 text-muted-foreground hover:bg-muted/50"}`}
+                                    >
+                                        {s === "price" ? "💰 Price" : s === "status" ? "✅ Status" : "👤 Name"}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                         <div className="space-y-3">
-                            {gig.applications.map((app: any) => (
+                            {sortApplications(gig.applications, appSort).map((app: any) => (
                                 <div key={app.id} className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
                                     <div className="flex-1">
                                         <div className="font-medium">{app.applicant?.firstName} {app.applicant?.lastName}</div>
