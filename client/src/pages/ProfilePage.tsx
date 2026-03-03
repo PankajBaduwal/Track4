@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BookOpen, CalendarPlus, GraduationCap, Layers3, Plus, Trash2 } from "lucide-react";
+import { BookOpen, CalendarPlus, GraduationCap, Layers3, Plus, Trash2, BookMarked } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -81,12 +81,17 @@ export default function ProfilePage() {
             <div className="p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 dark:bg-green-900/40 px-3 py-1 text-xs font-semibold text-green-700 dark:text-green-300">
+                      <GraduationCap className="h-3.5 w-3.5" /> Teacher
+                    </span>
+                  </div>
                   <div className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5 text-primary" />
-                    <div className="font-display text-2xl tracking-tight">Tutor profile</div>
+                    <GraduationCap className="h-5 w-5 text-green-600" />
+                    <div className="font-display text-2xl tracking-tight">Teacher Profile</div>
                   </div>
                   <div className="mt-1 text-sm text-muted-foreground">
-                    This is what students see when browsing.
+                    This is what students see when they're looking for a teacher.
                   </div>
                 </div>
               </div>
@@ -118,10 +123,10 @@ export default function ProfilePage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <BookOpen className="h-5 w-5 text-accent" />
-                    <div className="font-display text-2xl tracking-tight">Subjects</div>
+                    <div className="font-display text-2xl tracking-tight">Subjects I Teach</div>
                   </div>
                   <div className="mt-1 text-sm text-muted-foreground">
-                    Add the classes you can teach and set a confident rate.
+                    Add the subjects you can teach and set your hourly rate.
                   </div>
                 </div>
                 <Button
@@ -273,12 +278,17 @@ export default function ProfilePage() {
         <div className="lg:col-span-5 space-y-6">
           <Card className="rounded-3xl border border-card-border/70 bg-card shadow-sm noise-overlay">
             <div className="p-6">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300">
+                  <BookMarked className="h-3.5 w-3.5" /> Student
+                </span>
+              </div>
               <div className="flex items-center gap-2">
-                <Layers3 className="h-5 w-5 text-primary" />
-                <div className="font-display text-2xl tracking-tight">Tutee profile</div>
+                <BookMarked className="h-5 w-5 text-blue-600" />
+                <div className="font-display text-2xl tracking-tight">Student Profile</div>
               </div>
               <div className="mt-1 text-sm text-muted-foreground">
-                This helps tutors tailor sessions to your goals.
+                This helps teachers understand what you want to learn.
               </div>
 
               <div className="mt-5">
@@ -307,23 +317,21 @@ export default function ProfilePage() {
               <div className="font-display text-xl tracking-tight">Publishing checklist</div>
               <div className="mt-2 grid grid-cols-1 gap-3">
                 <div className="rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm">
-                  <div className="font-medium">1) Tutor profile</div>
+                  <div className="font-medium flex items-center gap-1.5"><GraduationCap className="h-4 w-4 text-green-600" /> 1) Teacher profile</div>
                   <div className="text-muted-foreground">
-                    {tutorProfile.data ? "Done" : "Add your university + bio"}
+                    {tutorProfile.data ? "✅ Done" : "Add your university + bio to start teaching"}
                   </div>
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm">
-                  <div className="font-medium">2) Subjects</div>
+                  <div className="font-medium flex items-center gap-1.5"><BookOpen className="h-4 w-4 text-accent" /> 2) Subjects I Teach</div>
                   <div className="text-muted-foreground">
-                    {(subjects.data ?? []).length > 0 ? "Done" : "Add at least one subject"}
+                    {(subjects.data ?? []).length > 0 ? "✅ Done" : "Add at least one subject"}
                   </div>
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm">
-                  <div className="font-medium">3) Availability</div>
+                  <div className="font-medium flex items-center gap-1.5"><CalendarPlus className="h-4 w-4" /> 3) Availability</div>
                   <div className="text-muted-foreground">
-                    {(availability.data ?? []).length > 0
-                      ? "Done"
-                      : "Add a weekly window"}
+                    {(availability.data ?? []).length > 0 ? "✅ Done" : "Add a weekly window"}
                   </div>
                 </div>
               </div>

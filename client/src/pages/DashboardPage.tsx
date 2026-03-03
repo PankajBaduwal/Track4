@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "wouter";
-import { CalendarClock, ChevronRight, Search, Sparkles } from "lucide-react";
+import { BookMarked, CalendarClock, ChevronRight, GraduationCap, Search, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { StatCard } from "@/components/StatCard";
 import { Card } from "@/components/ui/card";
@@ -30,9 +30,9 @@ export default function DashboardPage() {
   const avgRate =
     (tutorSubjects.data ?? []).length > 0
       ? Math.round(
-          (tutorSubjects.data ?? []).reduce((a, b) => a + (b.hourlyRateCents ?? 0), 0) /
-            (tutorSubjects.data ?? []).length,
-        )
+        (tutorSubjects.data ?? []).reduce((a, b) => a + (b.hourlyRateCents ?? 0), 0) /
+        (tutorSubjects.data ?? []).length,
+      )
       : null;
 
   return (
@@ -78,9 +78,12 @@ export default function DashboardPage() {
                   )}
                   data-testid="dash-go-profile"
                 >
-                  <div className="text-sm font-medium">Complete your profile</div>
+                  <div className="text-sm font-medium">Set up your profiles</div>
                   <div className="mt-1 text-xs text-muted-foreground">
-                    Tutor + tutee profiles supported.
+                    <span className="inline-flex items-center gap-1 text-green-600 font-medium"><GraduationCap className="h-3 w-3" /> Teacher</span>
+                    {" or "}
+                    <span className="inline-flex items-center gap-1 text-blue-600 font-medium"><BookMarked className="h-3 w-3" /> Student</span>
+                    {" — or both!"}
                   </div>
                   <div className="mt-3 inline-flex items-center text-sm font-semibold">
                     Open <ChevronRight className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -97,10 +100,10 @@ export default function DashboardPage() {
                 >
                   <div className="flex items-center gap-2">
                     <Search className="h-4 w-4 text-accent" />
-                    <div className="text-sm font-medium">Find tutors</div>
+                    <div className="text-sm font-medium">Find a Teacher</div>
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">
-                    Filter by subject, university, and rate.
+                    Browse students who teach near you.
                   </div>
                   <div className="mt-3 inline-flex items-center text-sm font-semibold">
                     Search <ChevronRight className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -138,14 +141,18 @@ export default function DashboardPage() {
 
               <div className="mt-5 space-y-3">
                 <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-muted/20 px-4 py-3">
-                  <div className="text-sm text-muted-foreground">Tutor profile</div>
+                  <div className="text-sm text-muted-foreground flex items-center gap-1.5">
+                    <GraduationCap className="h-3.5 w-3.5 text-green-600" /> Teacher profile
+                  </div>
                   <div className="text-sm font-medium" data-testid="dash-tutor-profile">
-                    {tutorProfile.isLoading ? "…" : tutorProfile.data ? "Active" : "Not set"}
+                    {tutorProfile.isLoading ? "…" : tutorProfile.data ? (
+                      <span className="text-green-600 font-semibold">Active ✓</span>
+                    ) : "Not set"}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-muted/20 px-4 py-3">
-                  <div className="text-sm text-muted-foreground">Subjects listed</div>
+                  <div className="text-sm text-muted-foreground">Subjects I teach</div>
                   <div className="text-sm font-medium" data-testid="dash-subject-count">
                     {tutorSubjects.isLoading ? "…" : (tutorSubjects.data ?? []).length}
                   </div>
@@ -159,9 +166,13 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-muted/20 px-4 py-3">
-                  <div className="text-sm text-muted-foreground">Tutee profile</div>
+                  <div className="text-sm text-muted-foreground flex items-center gap-1.5">
+                    <BookMarked className="h-3.5 w-3.5 text-blue-600" /> Student profile
+                  </div>
                   <div className="text-sm font-medium" data-testid="dash-tutee-profile">
-                    {tuteeProfile.isLoading ? "…" : tuteeProfile.data ? "Ready" : "Not set"}
+                    {tuteeProfile.isLoading ? "…" : tuteeProfile.data ? (
+                      <span className="text-blue-600 font-semibold">Ready ✓</span>
+                    ) : "Not set"}
                   </div>
                 </div>
               </div>

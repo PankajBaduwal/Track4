@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useLocation } from "wouter";
-import { Sparkles, IndianRupee, Loader2, ArrowLeft, Palette, Code2, BookOpen } from "lucide-react";
+import { Sparkles, IndianRupee, Loader2, ArrowLeft, Palette, Code2, BookOpen, GraduationCap, BookMarked } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ export default function PostGigPage() {
     const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [category, setCategory] = React.useState("academic");
+    const [postType, setPostType] = React.useState<"learn" | "teach">("learn"); // NEW
     const [budgetStr, setBudgetStr] = React.useState("");
     const [skills, setSkills] = React.useState("");
     const [deadline, setDeadline] = React.useState("");
@@ -52,17 +53,20 @@ export default function PostGigPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const skillList = skills.split(",").map((s: string) => s.trim()).filter(Boolean);
+        // Embed post type tag at start of description
+        const tag = postType === "teach" ? "[TEACH]" : "[LEARN]";
+        const finalDesc = `${tag} ${enhancedDescription || description}`;
         await createGig.mutateAsync({
             title,
-            description: enhancedDescription || description,
+            description: finalDesc,
             category,
             budgetCents: Math.round(Number(budgetStr) * 100),
             skillsRequired: skillList,
             deadline: deadline ? new Date(deadline).toISOString() : null,
-            aiEnhancedDescription: enhancedDescription,
+            aiEnhancedDescription: enhancedDescription ? `${tag} ${enhancedDescription}` : null,
             aiSuggestedPriceCents: suggestedPrice?.amount || null,
         });
-        toast({ title: "🎉 Gig posted!", description: "Your gig is now live on the board." });
+        toast({ title: postType === "teach" ? "🎓 Teaching offer posted!" : "📚 Learning request posted!", description: "Your post is now live on the board." });
         navigate("/gig-board");
     };
 
@@ -77,10 +81,64 @@ export default function PostGigPage() {
 
                 <Card className="rounded-2xl border border-card-border/70 bg-card shadow-sm noise-overlay p-6">
                     <div className="mb-6">
-                        <h2 className="font-display text-2xl tracking-tight">Post a New Gig</h2>
+                        <h2 className="font-display text-2xl tracking-tight">Post on the Board</h2>
                         <p className="text-sm text-muted-foreground mt-1">
-                            Describe what you need help with. Kai can enhance your post and suggest fair pricing.
+                            Tell the community what you need — or what you can offer.
                         </p>
+                    </div>
+
+                    {/* ── Post Type Toggle ── */}
+                    <div className="mb-6">
+                        <p className="text-sm font-semibold mb-3">What are you posting?</p>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setPostType("learn")}
+                                className={`
+                                    flex flex-col items-center gap-2 rounded-2xl border-2 p-4 transition-all duration-200
+                                    ${postType === "learn"
+                                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg shadow-blue-500/20"
+                                        : "border-border/70 bg-card hover:bg-accent/50"
+                                    }
+                                `}
+                            >
+                                <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${postType === "learn" ? "bg-blue-500" : "bg-muted"}`}>
+                                    <BookMarked className={`h-6 w-6 ${postType === "learn" ? "text-white" : "text-muted-foreground"}`} />
+                                </div>
+                                <div className="text-center">
+                                    <div className={`font-semibold text-sm ${postType === "learn" ? "text-blue-700 dark:text-blue-300" : ""}`}>I want to Learn</div>
+                                    <div className="text-xs text-muted-foreground mt-0.5">Looking for a teacher</div>
+                                </div>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setPostType("teach")}
+                                className={`
+                                    flex flex-col items-center gap-2 rounded-2xl border-2 p-4 transition-all duration-200
+                                    ${postType === "teach"
+                                        ? "border-green-500 bg-green-50 dark:bg-green-900/20 shadow-lg shadow-green-500/20"
+                                        : "border-border/70 bg-card hover:bg-accent/50"
+                                    }
+                                `}
+                            >
+                                <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${postType === "teach" ? "bg-green-500" : "bg-muted"}`}>
+                                    <GraduationCap className={`h-6 w-6 ${postType === "teach" ? "text-white" : "text-muted-foreground"}`} />
+                                </div>
+                                <div className="text-center">
+                                    <div className={`font-semibold text-sm ${postType === "teach" ? "text-green-700 dark:text-green-300" : ""}`}>I want to Teach</div>
+                                    <div className="text-xs text-muted-foreground mt-0.5">Offering my expertise</div>
+                                </div>
+                            </button>
+                        </div>
+
+                        {/* Context tip */}
+                        <div className={`mt-3 rounded-xl px-4 py-2.5 text-xs flex items-center gap-2 ${postType === "learn" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300" : "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"}`}>
+                            {postType === "learn"
+                                ? <><BookMarked className="h-3.5 w-3.5 shrink-0" /> Students will apply to help you learn this topic.</>
+                                : <><GraduationCap className="h-3.5 w-3.5 shrink-0" /> Students looking to learn will reach out to you.</>
+                            }
+                        </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
@@ -148,7 +206,10 @@ export default function PostGigPage() {
                                 id="desc"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Describe what you need help with in a few sentences..."
+                                placeholder={postType === "teach"
+                                    ? "Describe what you can teach, your experience, teaching style..."
+                                    : "Describe what you want to learn, your current level, goals..."
+                                }
                                 className="mt-1.5 rounded-xl min-h-[100px]"
                                 required
                             />
@@ -250,10 +311,13 @@ export default function PostGigPage() {
                         <Button
                             type="submit"
                             disabled={createGig.isPending || !title || !description || !budgetStr}
-                            className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25 h-12 text-base font-medium"
+                            className={`w-full rounded-xl text-white shadow-lg h-12 text-base font-medium ${postType === "teach"
+                                    ? "bg-gradient-to-r from-green-600 to-emerald-600 shadow-green-500/25 hover:shadow-green-500/40"
+                                    : "bg-gradient-to-r from-blue-600 to-cyan-600 shadow-blue-500/25 hover:shadow-blue-500/40"
+                                }`}
                         >
                             {createGig.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                            Post Gig
+                            {postType === "teach" ? "🎓 Post Teaching Offer" : "📚 Post Learning Request"}
                         </Button>
                     </form>
                 </Card>

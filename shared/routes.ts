@@ -81,6 +81,8 @@ export const api = {
             tutorProfile: tutorProfileSchema,
             subjects: z.array(tutorSubjectSchema),
             availability: z.array(tutorAvailabilitySchema),
+            averageRating: z.number().nullable().optional(),
+            totalReviews: z.number().optional(),
           }),
         ),
       },

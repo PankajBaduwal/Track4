@@ -44,6 +44,8 @@ export interface TutorSearchResult {
   tutorProfile: TutorProfile;
   subjects: TutorSubject[];
   availability: TutorAvailability[];
+  averageRating: number | null;
+  totalReviews: number;
 }
 
 export interface TutorDetailResult extends TutorSearchResult {
@@ -349,14 +351,35 @@ export class DatabaseStorage implements IStorage {
       byTutorAvail.set(a.tutorId, list);
     }
 
+    // Bulk-fetch average rating per tutor from reviews table
+    const ratingRows = await db
+      .select({
+        revieweeId: reviews.revieweeId,
+        avg: sql<number>`avg(${reviews.rating})::float`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(reviews)
+      .where(or(...tutorIds.map((id) => eq(reviews.revieweeId, id))))
+      .groupBy(reviews.revieweeId);
+
+    const ratingByTutor = new Map<string, { avg: number; count: number }>();
+    for (const r of ratingRows) {
+      ratingByTutor.set(r.revieweeId, { avg: r.avg, count: r.count });
+    }
+
     return rows
       .filter((r) => tutorIds.includes(r.user.id))
-      .map((r) => ({
-        user: r.user,
-        tutorProfile: r.tutorProfile,
-        subjects: byTutorSubjects.get(r.user.id) ?? [],
-        availability: byTutorAvail.get(r.user.id) ?? [],
-      }));
+      .map((r) => {
+        const ratingData = ratingByTutor.get(r.user.id);
+        return {
+          user: r.user,
+          tutorProfile: r.tutorProfile,
+          subjects: byTutorSubjects.get(r.user.id) ?? [],
+          availability: byTutorAvail.get(r.user.id) ?? [],
+          averageRating: ratingData ? Math.round(ratingData.avg * 10) / 10 : null,
+          totalReviews: ratingData?.count ?? 0,
+        };
+      });
   }
 
   async getTutor(tutorId: string): Promise<TutorDetailResult | undefined> {
