@@ -1,0 +1,150 @@
+﻿client/src/components/forms/BookSessionDialog.tsx(75,38): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(names: readonly ("status" | "tutorId" | "hourlyRateCents" | "tuteeId" | "scheduledAt" | "durationMinutes" | "totalAmountCents" | "platformFeeCents" | "tutorEarningsCents" | "paymentStatus")[], defaultValue?: { ...; } | undefined): readonly (string | ... 2 more ... | undefined)[]', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'readonly ("status" | "tutorId" | "hourlyRateCents" | "tuteeId" | "scheduledAt" | "durationMinutes" | "totalAmountCents" | "platformFeeCents" | "tutorEarningsCents" | "paymentStatus")[]'.
+  Overload 2 of 4, '(name: "status" | "tutorId" | "hourlyRateCents" | "tuteeId" | "scheduledAt" | "durationMinutes" | "totalAmountCents" | "platformFeeCents" | "tutorEarningsCents" | "paymentStatus", defaultValue?: string | ... 2 more ... | undefined): string | ... 2 more ... | undefined', gave the following error.
+    Argument of type '"subject"' is not assignable to parameter of type '"status" | "tutorId" | "hourlyRateCents" | "tuteeId" | "scheduledAt" | "durationMinutes" | "totalAmountCents" | "platformFeeCents" | "tutorEarningsCents" | "paymentStatus"'.
+  Overload 3 of 4, '(callback: WatchObserver<{ tutorId: string; hourlyRateCents: number; scheduledAt: Date; durationMinutes: number; status?: "pending" | "confirmed" | "completed" | "cancelled" | undefined; tuteeId?: string | undefined; totalAmountCents?: number | undefined; platformFeeCents?: number | undefined; tutorEarningsCents?: number | undefined; paymentStatus?: "pending" | ... 2 more ... | undefined; }>, defaultValues?: { ...; } | undefined): Subscription', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'WatchObserver<{ tutorId: string; hourlyRateCents: number; scheduledAt: Date; durationMinutes: number; status?: "pending" | "confirmed" | "completed" | "cancelled" | undefined; tuteeId?: string | undefined; totalAmountCents?: number | undefined; platformFeeCents?: number | undefined; tutorEarningsCents?: number | und...'.
+client/src/components/forms/BookSessionDialog.tsx(77,40): error TS2367: This comparison appears to be unintentional because the types 'string' and 'readonly (string | number | Date | undefined)[]' have no overlap.
+client/src/components/forms/BookSessionDialog.tsx(100,17): error TS2322: Type '"subject"' is not assignable to type '"status" | "tutorId" | "hourlyRateCents" | "tuteeId" | "scheduledAt" | "durationMinutes" | "totalAmountCents" | "platformFeeCents" | "tutorEarningsCents" | "paymentStatus"'.
+client/src/components/forms/BookSessionDialog.tsx(104,29): error TS2322: Type 'string | number | Date | undefined' is not assignable to type 'string | undefined'.
+  Type 'number' is not assignable to type 'string'.
+client/src/components/forms/BookSessionDialog.tsx(174,15): error TS2322: Type '"tuteeNotes"' is not assignable to type '"status" | "tutorId" | "hourlyRateCents" | "tuteeId" | "scheduledAt" | "durationMinutes" | "totalAmountCents" | "platformFeeCents" | "tutorEarningsCents" | "paymentStatus"'.
+client/src/components/forms/BookSessionDialog.tsx(179,22): error TS2322: Type '{ className: string; placeholder: string; "data-testid": string; onChange: (...event: any[]) => void; onBlur: Noop; value: string | number | Date | undefined; disabled?: boolean | undefined; name: "status" | ... 8 more ... | "paymentStatus"; ref: RefCallBack; }' is not assignable to type 'Omit<DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>, "ref">'.
+  Types of property 'value' are incompatible.
+    Type 'string | number | Date | undefined' is not assignable to type 'string | number | readonly string[] | undefined'.
+      Type 'Date' is not assignable to type 'string | number | readonly string[] | undefined'.
+        Type 'Date' is missing the following properties from type 'readonly string[]': length, concat, join, slice, and 26 more.
+client/src/components/forms/TuteeProfileForm.tsx(27,7): error TS2353: Object literal may only specify known properties, and 'yearOfStudy' does not exist in type 'AsyncDefaultValues<{ university: string; }> | { university?: string | undefined; }'.
+client/src/components/forms/TuteeProfileForm.tsx(41,7): error TS2353: Object literal may only specify known properties, and 'yearOfStudy' does not exist in type '{ university: string; } | { university?: string | undefined; } | ResetAction<{ university: string; }>'.
+client/src/components/forms/TuteeProfileForm.tsx(60,37): error TS2345: Argument of type '(values: FormValues) => void' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'values' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ university: string; }'.
+      Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; }'.
+client/src/components/forms/TuteeProfileForm.tsx(66,13): error TS2322: Type 'Control<{ university: string; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; }, any, { university: string; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }> | undefined'.
+      Type 'Resolver<{ university: string; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; }'.
+client/src/components/forms/TuteeProfileForm.tsx(84,13): error TS2322: Type 'Control<{ university: string; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; }, any, { university: string; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }> | undefined'.
+      Type 'Resolver<{ university: string; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; }'.
+client/src/components/forms/TuteeProfileForm.tsx(85,13): error TS2322: Type '"major"' is not assignable to type '"university"'.
+client/src/components/forms/TuteeProfileForm.tsx(105,13): error TS2322: Type 'Control<{ university: string; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; }, any, { university: string; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }> | undefined'.
+      Type 'Resolver<{ university: string; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; }'.
+client/src/components/forms/TuteeProfileForm.tsx(106,13): error TS2322: Type '"yearOfStudy"' is not assignable to type '"university"'.
+client/src/components/forms/TuteeProfileForm.tsx(125,13): error TS2322: Type 'Control<{ university: string; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; }, any, { university: string; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }> | undefined'.
+      Type 'Resolver<{ university: string; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; }, any, { university: string; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; }'.
+client/src/components/forms/TuteeProfileForm.tsx(126,13): error TS2322: Type '"timezone"' is not assignable to type '"university"'.
+client/src/components/forms/TutorProfileForm.tsx(29,7): error TS2353: Object literal may only specify known properties, and 'yearOfStudy' does not exist in type 'AsyncDefaultValues<{ university: string; timezone?: string | undefined; }> | { university?: string | undefined; timezone?: string | undefined; }'.
+client/src/components/forms/TutorProfileForm.tsx(40,7): error TS2353: Object literal may only specify known properties, and 'yearOfStudy' does not exist in type '{ university: string; timezone?: string | undefined; } | { university?: string | undefined; timezone?: string | undefined; } | ResetAction<{ university: string; timezone?: string | undefined; }>'.
+client/src/components/forms/TutorProfileForm.tsx(57,13): error TS2322: Type 'Control<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; timezone?: string | undefined; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; timezone?: string | undefined; }'.
+client/src/components/forms/TutorProfileForm.tsx(75,13): error TS2322: Type 'Control<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; timezone?: string | undefined; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; timezone?: string | undefined; }'.
+client/src/components/forms/TutorProfileForm.tsx(76,13): error TS2322: Type '"major"' is not assignable to type '"university" | "timezone"'.
+client/src/components/forms/TutorProfileForm.tsx(96,13): error TS2322: Type 'Control<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; timezone?: string | undefined; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; timezone?: string | undefined; }'.
+client/src/components/forms/TutorProfileForm.tsx(97,13): error TS2322: Type '"yearOfStudy"' is not assignable to type '"university" | "timezone"'.
+client/src/components/forms/TutorProfileForm.tsx(116,13): error TS2322: Type 'Control<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; timezone?: string | undefined; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; timezone?: string | undefined; }'.
+client/src/components/forms/TutorProfileForm.tsx(136,11): error TS2322: Type 'Control<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }> | undefined'.
+      Type 'Resolver<{ university: string; timezone?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ university: string; timezone?: string | undefined; }, any, { university: string; timezone?: string | undefined; }>'.
+        Type 'TFieldValues' is not assignable to type '{ university: string; timezone?: string | undefined; }'.
+          Property 'university' is missing in type 'FieldValues' but required in type '{ university: string; timezone?: string | undefined; }'.
+client/src/components/forms/TutorProfileForm.tsx(137,11): error TS2322: Type '"bio"' is not assignable to type '"university" | "timezone"'.
+client/src/pages/SessionsPage.tsx(181,41): error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+client/src/pages/SessionsPage.tsx(208,41): error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+client/src/pages/SessionsPage.tsx(235,41): error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+client/src/pages/TutorDetailPage.tsx(30,11): error TS2339: Property 'data' does not exist on type '{ user: { id: string; email: string | null; passwordHash: string | null; firstName: string | null; lastName: string | null; profileImageUrl: string | null; createdAt: Date | null; updatedAt: Date | null; } | null | undefined; ... 9 more ...; isLoggingOut: boolean; }'.
+server/routes.ts(47,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(55,56): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(70,54): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(78,53): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(99,11): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(124,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(137,64): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(149,60): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(169,9): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(182,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(190,56): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(206,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(220,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(242,9): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(266,49): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(269,52): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(306,52): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(314,79): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(322,49): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(325,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(348,71): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(356,60): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(362,52): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(370,7): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+server/routes.ts(380,44): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+shared/routes.ts(125,19): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(149,19): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(165,19): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(199,19): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(236,19): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(261,17): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(261,27): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(261,44): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(288,17): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(288,27): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/routes.ts(288,44): error TS2322: Type 'boolean' is not assignable to type 'never'.
